@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public void Hello1(){
         System.out.println("Hello world");
+        int x;
     }
 
 }
