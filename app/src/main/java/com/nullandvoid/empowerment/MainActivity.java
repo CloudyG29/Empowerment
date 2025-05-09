@@ -9,7 +9,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
-
+    OkHttpClient client = new OkHttpClient();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,18 +28,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void Login(String email, String password) {
-        OkHttpClient client = new OkHttpClient();
 
-        HttpUrl url = HttpUrl.parse("https://lamp.ms.wits.ac.za/home/s2801257/Login.php")
-                .newBuilder()
-                .addQueryParameter("email", email)
-                .addQueryParameter("password", password)
+        RequestBody formBody = new FormBody.Builder()
+                .add("email", email)
+                .add("password", password)
                 .build();
 
         Request request = new Request.Builder()
-                .url(url)
+                .url("https://lamp.ms.wits.ac.za/home/s2801257/Login.php")
+                .post(formBody)
                 .build();
-        String s;
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
@@ -54,10 +52,39 @@ public class MainActivity extends AppCompatActivity {
 
                 final String responseData = response.body().string();
 
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(() -> myTextView.setText(responseData));
                     //Do something here
+            }
+        });
+    }
+
+    private void Register(String name, String surname, String email, String password) {
+
+        RequestBody formBody = new FormBody.Builder()
+                .add("email", email)
+                .add("password", password)
+                .add("name", name)
+                .add("surname", surname)
+                .build();
+
+        Request request = new Request.Builder()
+                .url("https://lamp.ms.wits.ac.za/home/s2801257/Register.php")
+                .post(formBody)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    throw new IOException("Unexpected code " + response);
                 }
+
+                final String responseData = response.body().string();
+
+                    //Do something here
             }
         });
     }
