@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/mainbackground"
-    tools:context=".login" >
+    tools:context=".LoginActivity" >
 
     <View
         android:id="@+id/view"
@@ -81,10 +81,12 @@
 
     <TextView
         android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="196dp"
+        android:layout_height="35dp"
         android:layout_marginTop="16dp"
+        android:onClick="goSignup"
         android:text="Dont have an account? Sign up."
+        android:textAlignment="center"
         android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="@+id/view"
         app:layout_constraintEnd_toEndOf="@+id/view"
