@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -16,7 +15,6 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -30,13 +28,13 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class SignupActivity extends AppCompatActivity {
     OkHttpClient client = new OkHttpClient();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_signup);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -81,9 +79,9 @@ public class MainActivity extends AppCompatActivity {
                     public void run() {
                         try {
                             JSONObject person = new JSONObject(responseData);
-                            Toast.makeText(MainActivity.this, person.getString("status"), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SignupActivity.this, person.getString("status"), Toast.LENGTH_SHORT).show();
                             if(person.getString("status").equals("success")) {
-                                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                                Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
                                 startActivity(intent);
                                 finish();
                             }
@@ -114,14 +112,14 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
             //Toast.makeText(getContext(), "Empty field!", Toast.LENGTH_SHORT).show();
-            Toast.makeText(MainActivity.this, "Empty field!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SignupActivity.this, "Empty field!", Toast.LENGTH_SHORT).show();
 
     }
         Register(Name, Surname, UserEmail, Password);
     }
 
     public void goLogin(View view) {
-        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();
     }
