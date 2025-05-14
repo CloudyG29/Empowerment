@@ -28,7 +28,9 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class LoginActivity extends AppCompatActivity {
+
     OkHttpClient client = new OkHttpClient();
+     public static JSONObject person_2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +78,7 @@ public class LoginActivity extends AppCompatActivity {
                         try{
 
                             JSONObject person= new JSONObject(responseData);
+                            person_2 = person;
                             int size = person.length();
                             if(size == 1 ) {
                                 if(person.getString("error").equals("Incorrect password.")){
@@ -129,4 +132,5 @@ public class LoginActivity extends AppCompatActivity {
         }
         Login(UserEmail, Password);
     }
+
 }
