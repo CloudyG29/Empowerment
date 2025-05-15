@@ -34,7 +34,7 @@ public class EmpowerFragment extends Fragment {
     EditText item_name; ;
     EditText quantity;
     public int user_ID;
-    OKHttpClient client = new OkHttpClient();
+    OkHttpClient client = new OkHttpClient();
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -76,15 +76,21 @@ public class EmpowerFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState){
+        View view = inflater.inflate(R.layout.fragment_empower, container, false);
+        item_name = view.findViewById(R.id.Item_name);
+        quantity = view.findViewById(R.id.quantity);
+
+        return view;
+    }
 
     public void returns() throws JSONException {
         JSONObject person_3 = LoginActivity.person_2;
         if (person_3 != null) {
             user_ID = person_3.getInt("user_id");
-    }
-
-
-        // Get the values from the EditTexts
+        }
     }
     public void Donate() {
 
@@ -114,9 +120,7 @@ public class EmpowerFragment extends Fragment {
                 requireActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-
-
-                        JSONObject person ;
+                        JSONObject person;
                         try {
                             person = new JSONObject(responseData);
                         } catch (JSONException e) {
@@ -136,24 +140,8 @@ public class EmpowerFragment extends Fragment {
 
                 });
             }
+        });
 
 
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState){
-
-
-
-                    // Inflate the layout for this fragment
-
-                    View view = inflater.inflate(R.layout.fragment_empower, container, false);
-                    item_name = view.findViewById(R.id.Item_name);
-                    quantity = view.findViewById(R.id.quantity);
-
-                    return view;
-
-
-                   }
+        }
 }
-    }
