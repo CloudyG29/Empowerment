@@ -1,12 +1,29 @@
 package com.nullandvoid.empowerment;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -14,6 +31,11 @@ import android.view.ViewGroup;
  * create an instance of this fragment.
  */
 public class EmpowerFragment extends Fragment {
+    EditText item_name; ;
+    EditText quantity;
+    public int user_ID;
+    OKHttpClient client = new OkHttpClient();
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -55,10 +77,83 @@ public class EmpowerFragment extends Fragment {
         }
     }
 
+    public void returns() throws JSONException {
+        JSONObject person_3 = LoginActivity.person_2;
+        if (person_3 != null) {
+            user_ID = person_3.getInt("user_id");
+    }
+
+
+        // Get the values from the EditTexts
+    }
+    public void Donate() {
+
+        RequestBody formBody = new FormBody.Builder()
+                .add("userid", String.valueOf(user_ID))
+                .add("quantity", String.valueOf(quantity))
+                .add("itemid", String.valueOf(item_name))
+                .build();
+
+        Request request = new Request.Builder()
+                .url("https://lamp.ms.wits.ac.za/home/s2801257/CDonation.php")
+                .post(formBody)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    throw new IOException("Unexpected code " + response);
+                }
+
+                final String responseData = response.body().string();
+                requireActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+
+                        JSONObject person ;
+                        try {
+                            person = new JSONObject(responseData);
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                        try {
+                            if (person.getString("status").equals("error")) {
+                                Toast.makeText(getContext(), "donation failed", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getContext(), "Donation added", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+
+
+                });
+            }
+
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_empower, container, false);
-    }
+                             Bundle savedInstanceState){
+
+
+
+                    // Inflate the layout for this fragment
+
+                    View view = inflater.inflate(R.layout.fragment_empower, container, false);
+                    item_name = view.findViewById(R.id.Item_name);
+                    quantity = view.findViewById(R.id.quantity);
+
+                    return view;
+
+
+                   }
 }
+    }
