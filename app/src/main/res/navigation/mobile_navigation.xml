@@ -12,23 +12,23 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/empowerFragment"
+        android:id="@+id/navigation_empower"
         android:name="com.nullandvoid.empowerment.EmpowerFragment"
         android:label="fragment_empower"
         tools:layout="@layout/fragment_empower" />
     <fragment
-        android:id="@+id/beEmpoweredFragment"
+        android:id="@+id/navigation_beEmpowered"
         android:name="com.nullandvoid.empowerment.BeEmpoweredFragment"
         android:label="fragment_be_empowered"
         tools:layout="@layout/fragment_be_empowered" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/navigation_profile"
         android:name="com.nullandvoid.empowerment.ui.profile.ProfileFragment"
         android:label="@string/title_profile"
         tools:layout="@layout/fragment_profile" />
     <fragment
-        android:id="@+id/leaderBoardFragment"
+        android:id="@+id/navigation_leaderboard"
         android:name="com.nullandvoid.empowerment.LeaderBoardFragment"
         android:label="fragment_leader_board"
         tools:layout="@layout/fragment_leader_board" />
