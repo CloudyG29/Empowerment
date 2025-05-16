@@ -1,12 +1,31 @@
 package com.nullandvoid.empowerment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.zip.Inflater;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -14,6 +33,7 @@ import android.view.ViewGroup;
  * create an instance of this fragment.
  */
 public class EmpowerFragment extends Fragment {
+    OkHttpClient client = new OkHttpClient();
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -56,9 +76,72 @@ public class EmpowerFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_empower, container, false);
+        View view = inflater.inflate(R.layout.fragment_empower, container, false);
+        return view;
     }
+    //User user;
+   public void Donate(String itemid, String quantity) {
+
+        RequestBody formBody = new FormBody.Builder()
+                .add("userid", "")
+                .add("quantity", quantity)
+                .add("itemid", itemid)
+                .build();
+
+        Request request = new Request.Builder()
+                .url("https://lamp.ms.wits.ac.za/home/s1234567/CDonation.php")
+                .post(formBody)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    throw new IOException("Unexpected code " + response);
+                }
+
+                final String responseData = response.body().string();
+                requireActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try{
+
+                            JSONObject person= new JSONObject(responseData);
+                            int size = person.length();
+                            if(size == 1) {
+                                if(person.getString("error").equals("Incorrect password.")){
+                                    Toast.makeText(requireContext(), "Wrong  password", Toast.LENGTH_SHORT).show();
+                                }
+                                else {
+                                    Toast.makeText(requireContext(), "User does not exist", Toast.LENGTH_SHORT).show();
+                                }
+
+
+                            }
+                            else {
+                                //user = new User(person.getString("userid"), person.getString("name"), person.getString("surname"), person.getString("email"));
+                                Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(requireContext(), Menu.class);
+                                startActivity(intent);
+                                //finish();
+
+                            }
+
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                });
+
+            }
+        });
+    }
+
+
 }

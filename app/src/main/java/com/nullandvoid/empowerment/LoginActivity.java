@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -28,6 +29,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class LoginActivity extends AppCompatActivity {
+    //User user;
     OkHttpClient client = new OkHttpClient();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,7 @@ public class LoginActivity extends AppCompatActivity {
         b.setOnClickListener(v -> {
             login(v);
         });
+
     }
 
     public void Login(String email, String password) {
@@ -90,6 +93,7 @@ public class LoginActivity extends AppCompatActivity {
                             else {
 
                                 Toast.makeText(LoginActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                                //User user = new User(person.getString("UserID"), person.getString("Name"), person.getString("Surname"), person.getString("email"));
                                Intent intent = new Intent(LoginActivity.this, Menu.class);
                                 startActivity(intent);
                                 finish();
@@ -129,4 +133,6 @@ public class LoginActivity extends AppCompatActivity {
         }
         Login(UserEmail, Password);
     }
+
+
 }
