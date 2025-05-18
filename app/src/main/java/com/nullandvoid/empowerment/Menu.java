@@ -12,6 +12,8 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.nullandvoid.empowerment.databinding.ActivityMenuBinding;
+import com.nullandvoid.empowerment.ui.home.HomeFragment;
+import com.nullandvoid.empowerment.ui.item_select;
 
 public class Menu extends AppCompatActivity {
 
@@ -27,13 +29,28 @@ public class Menu extends AppCompatActivity {
         BottomNavigationView navView = findViewById(R.id.nav_view);
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_home,
-                R.id.empowerFragment,
-                R.id.beEmpoweredFragment,
-                R.id.navigation_notifications,
-                R.id.leaderBoardFragment)
+                R.id.navigation_empower,
+                R.id.navigation_beEmpowered,
+                R.id.navigation_profile,
+                R.id.navigation_leaderboard)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_menu);
-        NavigationUI.setupWithNavController(binding.navView, navController);
+        binding.navView.setOnItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.navigation_beEmpowered:
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.fragment_container, new item_select())
+                            .commit();
+                    return true;
+
+
+
+                default:
+                    return false;
+            }
+        });
+
     }
 
 

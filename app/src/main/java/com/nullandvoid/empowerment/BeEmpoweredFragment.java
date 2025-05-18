@@ -1,12 +1,31 @@
+
 package com.nullandvoid.empowerment;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -14,6 +33,12 @@ import android.view.ViewGroup;
  * create an instance of this fragment.
  */
 public class BeEmpoweredFragment extends Fragment {
+    EditText item_name; ;
+    EditText quantity;
+    Button Dbtn;
+    public int user_ID;
+    OkHttpClient client = new OkHttpClient();
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -34,7 +59,7 @@ public class BeEmpoweredFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment BeEmpoweredFragment.
+     * @return A new instance of fragment EmpowerFragment.
      */
     // TODO: Rename and change types and number of parameters
     public static BeEmpoweredFragment newInstance(String param1, String param2) {
@@ -54,11 +79,90 @@ public class BeEmpoweredFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_be_empowered, container, false);
+                             Bundle savedInstanceState){
+        View view = inflater.inflate(R.layout.fragment_empower, container, false);
+        item_name = view.findViewById(R.id.Item_name);
+
+        Dbtn = view.findViewById(R.id.Donatebtn);
+
+        Dbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    Donate();
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+        });
+        return view;
     }
+
+    public int returns(String id) throws JSONException {
+        JSONObject person_3 = LoginActivity.person_2;
+        if (person_3 != null) {
+            user_ID = person_3.getInt("UserID");
+            System.out.println(user_ID);
+        }
+        return user_ID;
+    }
+    public void Donate() throws JSONException {
+
+        RequestBody formBody = new FormBody.Builder()
+
+                .add("userid", String.valueOf(LoginActivity.person_2.getInt("UserID")))
+                .add("quantity", String.valueOf(quantity))
+                .add("itemid", String.valueOf(item_name))
+                .build();
+
+        Request request = new Request.Builder()
+                .url("https://lamp.ms.wits.ac.za/home/s2801257/CDonation.php")
+                .post(formBody)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                e.printStackTrace();
+                System.out.println("failed decimally");
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    throw new IOException("Unexpected code " + response);
+                }
+
+                final String responseData = response.body().string();
+                requireActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        JSONObject person;
+                        try {
+                            person = new JSONObject(responseData);
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                        try {
+                            if (person.getString("status").equals("error")) {
+                                Toast.makeText(getContext(), "donation failed", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getContext(), "Donation added", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+
+
+                });
+            }
+        });
+
+
+    }
+
+
 }
