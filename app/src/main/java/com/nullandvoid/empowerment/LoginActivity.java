@@ -1,6 +1,8 @@
 package com.nullandvoid.empowerment;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -29,7 +31,14 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class LoginActivity extends AppCompatActivity {
-    //User user;
+    public static final String SHARED_PREFS = "shared_prefs";
+    public static final String EMAIL_KEY = "email_key";
+    public static final String NAME_KEY = "name_key";
+    public static final String USER_KEY = "user_key";
+    public static final String SURNAME_KEY = "surname_key";
+
+    SharedPreferences sharedPreferences;
+    String userid, email, name, surname;
     OkHttpClient client = new OkHttpClient();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +51,18 @@ public class LoginActivity extends AppCompatActivity {
             return insets;
         });
 
+        sharedPreferences = getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
+        userid = sharedPreferences.getString(USER_KEY, null);
+        email = sharedPreferences.getString(EMAIL_KEY, null);
+        name = sharedPreferences.getString(NAME_KEY, null);
+        surname = sharedPreferences.getString(SURNAME_KEY, null);
+
+        if(userid != null && email != null && name != null && surname != null) {
+            Intent i = new Intent(LoginActivity.this, Menu.class);
+            startActivity(i);
+            finish();
+        }
+
         Button b = findViewById(R.id.loginbtn);
         b.setOnClickListener(v -> {
             login(v);
@@ -49,10 +70,10 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    public void Login(String email, String password) {
+    public void Login(String Email, String password) {
 
         RequestBody formBody = new FormBody.Builder()
-                .add("email", email)
+                .add("email", Email)
                 .add("password", password)
                 .build();
 
@@ -64,6 +85,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 e.printStackTrace();
+                Toast.makeText(LoginActivity.this, "Network error", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -93,8 +115,14 @@ public class LoginActivity extends AppCompatActivity {
                             else {
 
                                 Toast.makeText(LoginActivity.this, "Success", Toast.LENGTH_SHORT).show();
-                                //User user = new User(person.getString("UserID"), person.getString("Name"), person.getString("Surname"), person.getString("email"));
-                               Intent intent = new Intent(LoginActivity.this, Menu.class);
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putString(USER_KEY, person.getString("UserID"));
+                                editor.putString(EMAIL_KEY, person.getString("Email"));
+                                editor.putString(NAME_KEY, person.getString("Name"));
+                                editor.putString(SURNAME_KEY, person.getString("Surname"));
+                                editor.apply();
+
+                                Intent intent = new Intent(LoginActivity.this, Menu.class);
                                 startActivity(intent);
                                 finish();
 
