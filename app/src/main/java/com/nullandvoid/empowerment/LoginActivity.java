@@ -15,6 +15,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -29,6 +30,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class LoginActivity extends AppCompatActivity {
+    public static JSONObject person_2;
     //User user;
     OkHttpClient client = new OkHttpClient();
     @Override
@@ -79,6 +81,7 @@ public class LoginActivity extends AppCompatActivity {
                         try{
 
                             JSONObject person= new JSONObject(responseData);
+                            person_2 = person;
                             int size = person.length();
                             if(size == 1 ) {
                                 if(person.getString("error").equals("Incorrect password.")){

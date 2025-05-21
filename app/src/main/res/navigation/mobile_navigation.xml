@@ -13,14 +13,21 @@
 
     <fragment
         android:id="@+id/navigation_empower"
-        android:name="com.nullandvoid.empowerment.EmpowerFragment"
+        android:name="com.nullandvoid.empowerment.ui.item_select"
         android:label="fragment_empower"
-        tools:layout="@layout/fragment_empower" />
+        tools:layout="@layout/fragment_empower">
+
+        <action
+            android:id="@+id/action_item_select_to_targetFragment"
+            app:destination="@id/navigation_beEmpowered" />
+    </fragment>
+
     <fragment
         android:id="@+id/navigation_beEmpowered"
         android:name="com.nullandvoid.empowerment.BeEmpoweredFragment"
         android:label="fragment_be_empowered"
         tools:layout="@layout/fragment_be_empowered" />
+
 
     <fragment
         android:id="@+id/navigation_profile"
