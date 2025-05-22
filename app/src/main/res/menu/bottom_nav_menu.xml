@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_home_black_24dp"
+        android:title="@string/title_home" />
+
+    <item
+        android:id="@+id/navigation_empower"
+        android:icon="@drawable/volunteer"
+        android:title="@string/title_empower" />
+
+    <item
+        android:id="@+id/navigation_beEmpowered"
+        android:icon="@drawable/concierge"
+        android:title="@string/title_beEmpowered" />
+
+    <item
+        android:id="@+id/navigation_leaderboard"
+        android:icon="@drawable/leaderboard"
+        android:title="@string/title_leaderboard" />
+    <item
+        android:id="@+id/navigation_profile"
+        android:icon="@drawable/outline_account_circle_24"
+        android:title="@string/title_profile" />
+
+
+</menu>
