@@ -16,11 +16,7 @@
         android:name="com.nullandvoid.empowerment.EmpowerFragment"
         android:label="fragment_empower"
         tools:layout="@layout/fragment_empower" />
-    <fragment
-        android:id="@+id/navigation_beEmpowered"
-        android:name="com.nullandvoid.empowerment.BeEmpoweredFragment"
-        android:label="fragment_be_empowered"
-        tools:layout="@layout/fragment_be_empowered" />
+
 
     <fragment
         android:id="@+id/navigation_profile"
@@ -32,4 +28,9 @@
         android:name="com.nullandvoid.empowerment.LeaderBoardFragment"
         android:label="fragment_leader_board"
         tools:layout="@layout/fragment_leader_board" />
+    <fragment
+        android:id="@+id/navigation_beEmpowered"
+        android:name="com.nullandvoid.empowerment.ui.dashboard.BeEmpoweredFragment"
+        android:label="fragment_BeEmpowered"
+        tools:layout="@layout/fragment_beempowered" />
 </navigation>
