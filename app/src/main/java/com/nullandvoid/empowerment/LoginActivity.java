@@ -125,11 +125,7 @@ public class LoginActivity extends AppCompatActivity {
                                 Intent intent = new Intent(LoginActivity.this, Menu.class);
                                 startActivity(intent);
                                 finish();
-
                             }
-
-
-
 
                         } catch (JSONException e) {
                             throw new RuntimeException(e);

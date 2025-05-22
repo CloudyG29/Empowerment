@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/fragbackground"
-    tools:context=".ui.dashboard.DashboardFragment">
+    tools:context=".ui.dashboard.BeEmpoweredFragment">
 
     <TextView
         android:id="@+id/text_dashboard"
@@ -20,4 +20,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Spinner
+        android:id="@+id/itemSpinner"
+        android:layout_width="330dp"
+        android:layout_height="25dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.387" />
 </androidx.constraintlayout.widget.ConstraintLayout>
