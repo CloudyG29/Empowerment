@@ -1,71 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    tools:context=".EmpowerFragment"
+    android:orientation="horizontal"
     android:background="@drawable/fragbackground"
-    android:id="@+id/frameLayout">
-
-    <View
-        android:id="@+id/view3"
-        android:layout_width="302dp"
-        android:layout_height="350dp"
-        android:background="@drawable/box"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_conversion_absoluteHeight="327dp"
-        tools:layout_conversion_absoluteWidth="299dp" />
+    tools:context=".EmpowerFragment">
 
     <Spinner
-        android:id="@+id/spinner"
-        android:layout_width="148dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="104dp"
-        android:background="@drawable/edittext"
-        android:padding="10dp"
-        app:layout_constraintEnd_toEndOf="@+id/view3"
-        app:layout_constraintHorizontal_bias="0.493"
-        app:layout_constraintStart_toStartOf="@+id/view3"
-        app:layout_constraintTop_toTopOf="@+id/view3" />
+        android:id="@+id/itemSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="251dp" />
 
     <EditText
-        android:id="@+id/editTextNumber"
+        android:id="@+id/quantity"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="44dp"
-        android:background="@drawable/edittext"
+        android:layout_height="231dp"
+        android:layout_weight="1"
         android:ems="10"
-        android:hint="Quanity"
-        android:inputType="number"
-        android:padding="10dp"
-        app:layout_constraintTop_toBottomOf="@+id/spinner"
-        tools:layout_editor_absoluteX="100dp" />
+        android:hint="Quantity"
+        android:inputType="number" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/addbtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
-        android:backgroundTint="#EDD30F"
-        android:text="Button"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="@+id/view3"
-        app:layout_constraintEnd_toEndOf="@+id/view3"
-        app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="@+id/view3"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNumber"
-        app:layout_constraintVertical_bias="0.0" />
+        android:layout_weight="1"
+        android:text="add" />
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Empower"
-        android:textSize="26sp"
-        tools:layout_editor_absoluteX="151dp"
-        tools:layout_editor_absoluteY="320dp" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
