@@ -167,6 +167,7 @@ public class BeEmpoweredFragment extends Fragment {
                     jsonResult.append(line);
                 }
                 in.close();
+                conn.disconnect();
 
                 JSONArray jsonArray = new JSONArray(jsonResult.toString());
                 ArrayList<String> items = new ArrayList<>();
@@ -175,15 +176,28 @@ public class BeEmpoweredFragment extends Fragment {
                 }
 
                 // Update the Spinner on the UI thread
-                requireActivity().runOnUiThread(() -> {
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(),
-                            android.R.layout.simple_spinner_item, items);
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    itemSpinner.setAdapter(adapter);
-                });
-
+                if (getActivity() != null) { // Check if activity is still available
+                    getActivity().runOnUiThread(() -> {
+                        if (getContext() != null && itemSpinner != null) { // Additional safety checks
+                            // *** THIS IS WHERE YOU APPLY THE CUSTOM LAYOUT ***
+                            ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                                    requireContext(),
+                                    R.layout.custom_spinner_selected_item, // Your custom layout for the selected item
+                                    items
+                            );
+                            // Set the layout for the Dropdown items (e.g., a standard Android layout)
+                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            itemSpinner.setAdapter(adapter);
+                        }
+                    });
+                }
             } catch (Exception e) {
                 e.printStackTrace();
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        Toast.makeText(getContext(), "Error fetching items: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
+                }
             }
         }).start();
     }
