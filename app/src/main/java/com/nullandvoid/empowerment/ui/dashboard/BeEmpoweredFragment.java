@@ -79,31 +79,7 @@ public class BeEmpoweredFragment extends Fragment {
             }
         });
 
-        /*
-        EditText Bquantity = root.findViewById(R.id.quantity);
-        EditText Bbio = root.findViewById(R.id.bio);
 
-        String bio = Bbio.getText().toString().trim();
-        String quantityText = Bquantity.getText().toString().trim();
-
-        if (bio.isEmpty()) {
-            Toast.makeText(getContext(), "Please enter a biography", Toast.LENGTH_SHORT).show();
-
-        }
-
-
-        if (quantityText.isEmpty()) {
-            Toast.makeText(getContext(), "Please enter a quantity", Toast.LENGTH_SHORT).show();
-
-        }
-
-        try {
-            quantity = Integer.parseInt(quantityText);
-        } catch (NumberFormatException e) {
-            Toast.makeText(getContext(), "Invalid number entered for quantity", Toast.LENGTH_SHORT).show();
-
-        }
-        */
         View donateBtn = root.findViewById(R.id.getbtn);
         donateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -189,10 +165,7 @@ public class BeEmpoweredFragment extends Fragment {
     }
 
     public void donate_request(int quantity, String bio, String selecteditem, String userid) {
-        System.out.println(userid);
-        System.out.println(quantity);
-        System.out.println(bio);
-        System.out.println(selecteditem);
+
         RequestBody formBody = new FormBody.Builder()
                 .add("Biography", bio)
                 .add("Quantity", String.valueOf(quantity))
