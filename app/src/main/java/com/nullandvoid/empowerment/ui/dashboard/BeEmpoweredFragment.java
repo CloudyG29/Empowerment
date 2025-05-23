@@ -233,7 +233,7 @@ public class BeEmpoweredFragment extends Fragment {
                         } else if (json.has("error")) {
                             Toast.makeText(getContext(), "Error: " + json.getString("error"), Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(getContext(), "Unexpected response", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Item requested successfully", Toast.LENGTH_SHORT).show();
                         }
 
                     } catch (Exception e) {
