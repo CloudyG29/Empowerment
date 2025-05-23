@@ -1,6 +1,10 @@
 package com.nullandvoid.empowerment.ui.home;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,14 +18,18 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.nullandvoid.empowerment.LoginActivity;
+import com.nullandvoid.empowerment.Menu;
 import com.nullandvoid.empowerment.databinding.FragmentHomeBinding;
 import com.nullandvoid.empowerment.R;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -32,13 +40,23 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
     public Spinner myyspinner;
-    private RecyclerView requestRecyclerView;
-    private RequestUserAdapter requestAdapter;
+    OkHttpClient client=new OkHttpClient();
+    private RecyclerView recyclerView;
     private RequestUserAdapter adapter;
+     public String selecteditem;
+
 
     private List<RequestUser> userList = new ArrayList<>();
 
@@ -49,17 +67,19 @@ public class HomeFragment extends Fragment {
         View root = binding.getRoot();
 
         myyspinner = root.findViewById(R.id.myyspinner);
-        requestRecyclerView = root.findViewById(R.id.requestRecyclerView);
+        recyclerView = root.findViewById(R.id.requestRecyclerView);
         adapter = new RequestUserAdapter(userList);
-        requestRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        requestRecyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(adapter);
 
         loadSpinnerItems();
         myyspinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedItem = (String) myyspinner.getSelectedItem();
-                fetchUsersForItem(selectedItem);
+                selecteditem=selectedItem;
+                getusers(selecteditem,adapter);
+
             }
 
             @Override
@@ -102,61 +122,7 @@ public class HomeFragment extends Fragment {
         }).start();
     }
 
-    private void fetchUsersForItem(String itemid) {
-        new Thread(() -> {
-            try {
-                URL url = new URL("http://your_ip_or_domain/your_path/get_requests.php");
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("POST");
-                conn.setDoOutput(true);
-                conn.setDoInput(true);
 
-                OutputStream os = conn.getOutputStream();
-                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-                String data = "itemid=" + URLEncoder.encode(itemid, "UTF-8");
-                writer.write(data);
-                writer.flush();
-                writer.close();
-                os.close();
-
-                InputStream inputStream = conn.getInputStream();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-                StringBuilder sb = new StringBuilder();
-                String line;
-
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line);
-                }
-
-                reader.close();
-                conn.disconnect();
-
-                JSONArray jsonArray = new JSONArray(sb.toString());
-
-                userList.clear();
-
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject obj = jsonArray.getJSONObject(i);
-                    String name = obj.getString("Name");
-                    String surname = obj.getString("Surname");
-                    int quantity = obj.getInt("Quantity");
-                    String bio = obj.getString("Biography");
-
-                    userList.add(new RequestUser(name, surname, quantity, bio));
-                }
-
-                requireActivity().runOnUiThread(() -> {
-                    adapter.notifyDataSetChanged();
-                    Toast.makeText(getContext(), "Users loaded: " + userList.size(), Toast.LENGTH_SHORT).show();
-                });
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                requireActivity().runOnUiThread(() ->
-                        Toast.makeText(getContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-            }
-        }).start();
-    }
 
     @Override
     public void onDestroyView() {
@@ -197,4 +163,53 @@ public class HomeFragment extends Fragment {
             }
         }).start();
     }
+    public void getusers(String selecteditem,RequestUserAdapter adapter) {
+
+        RequestBody formBody = new FormBody.Builder()
+                .add("ItemName", selecteditem)
+                .build();
+
+        Request request = new Request.Builder()
+                .url("https://lamp.ms.wits.ac.za/home/s2801257/getRequest.php")
+                .post(formBody)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                e.printStackTrace();
+                Toast.makeText(getContext(), "Network error", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    throw new IOException("Unexpected code " + response);
+                }
+
+                final String responseData = response.body().string();
+                try {
+                    JSONArray array=new JSONArray(responseData);
+                    List<RequestUser> tempList=new ArrayList<>();
+
+                    for (int i = 0; i < array.length(); i++) {
+                        JSONObject obj = array.getJSONObject(i);
+
+                        String name = obj.getString("Name");
+                        String surname = obj.getString("Surname");
+                        int quantity = Integer.parseInt(obj.getString("Quantity"));
+                        String biography = obj.getString("Biography");
+
+                        tempList.add(new RequestUser(name, surname, quantity, biography));
+                    }
+                    new Handler(Looper.getMainLooper()).post(() -> {
+                        adapter.updateData(tempList);  // This updates the RecyclerView
+                    });
+
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+
+                }
+            });
+        }
 }

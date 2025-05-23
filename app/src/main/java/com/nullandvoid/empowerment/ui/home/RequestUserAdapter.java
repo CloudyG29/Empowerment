@@ -18,6 +18,11 @@ public class RequestUserAdapter extends RecyclerView.Adapter<RequestUserAdapter.
     public RequestUserAdapter(List<RequestUser> userList) {
         this.userList = userList;
     }
+    public void updateData(List<RequestUser> newList) {
+        this.userList = newList;
+        notifyDataSetChanged();
+    }
+
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView name, quantity, biography;
