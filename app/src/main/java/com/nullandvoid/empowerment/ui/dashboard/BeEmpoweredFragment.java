@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,6 +47,7 @@ public class BeEmpoweredFragment extends Fragment {
     public Spinner itemSpinner;
     public static final String USER_KEY = "user_key";
     public int quantity;
+
     public String selecteditem;
     public String bio;
     SharedPreferences sharedPreferences;
@@ -60,7 +62,6 @@ public class BeEmpoweredFragment extends Fragment {
         sharedPreferences = requireActivity().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
         userid = sharedPreferences.getString(USER_KEY, null);
         View root = binding.getRoot();
-
 
 
         fetchItemsFromServer();
@@ -78,10 +79,70 @@ public class BeEmpoweredFragment extends Fragment {
             }
         });
 
-        TextView Bquantity=root.findViewById(R.id.quantity);
-        TextView Bbio=root.findViewById(R.id.bio);
-        bio=Bbio.getText().toString();
-        quantity=Integer.parseInt(Bquantity.getText().toString());
+        /*
+        EditText Bquantity = root.findViewById(R.id.quantity);
+        EditText Bbio = root.findViewById(R.id.bio);
+
+        String bio = Bbio.getText().toString().trim();
+        String quantityText = Bquantity.getText().toString().trim();
+
+        if (bio.isEmpty()) {
+            Toast.makeText(getContext(), "Please enter a biography", Toast.LENGTH_SHORT).show();
+
+        }
+
+
+        if (quantityText.isEmpty()) {
+            Toast.makeText(getContext(), "Please enter a quantity", Toast.LENGTH_SHORT).show();
+
+        }
+
+        try {
+            quantity = Integer.parseInt(quantityText);
+        } catch (NumberFormatException e) {
+            Toast.makeText(getContext(), "Invalid number entered for quantity", Toast.LENGTH_SHORT).show();
+
+        }
+        */
+        View donateBtn = root.findViewById(R.id.getbtn);
+        donateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText Bquantity = root.findViewById(R.id.quantity);
+                EditText Bbio = root.findViewById(R.id.bio);
+
+                String bioInput = Bbio.getText().toString().trim();
+                String quantityText = Bquantity.getText().toString().trim();
+
+                if (bioInput.isEmpty()) {
+                    Toast.makeText(getContext(), "Please enter a biography", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (quantityText.isEmpty()) {
+                    Toast.makeText(getContext(), "Please enter a quantity", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                int parsedQuantity;
+                try {
+                    parsedQuantity = Integer.parseInt(quantityText);
+                } catch (NumberFormatException e) {
+                    Toast.makeText(getContext(), "Invalid quantity", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (selecteditem == null || selecteditem.isEmpty()) {
+                    Toast.makeText(getContext(), "Please select an item", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                donate_request(parsedQuantity, bioInput, selecteditem, userid);
+            }
+        });
+
+
+
         return root;
     }
 
@@ -126,47 +187,62 @@ public class BeEmpoweredFragment extends Fragment {
             }
         }).start();
     }
-    public void donate_request(int quantity,String bio,String selecteditem,String userid){
 
+    public void donate_request(int quantity, String bio, String selecteditem, String userid) {
+        System.out.println(userid);
+        System.out.println(quantity);
+        System.out.println(bio);
+        System.out.println(selecteditem);
+        RequestBody formBody = new FormBody.Builder()
+                .add("Biography", bio)
+                .add("Quantity", String.valueOf(quantity))
+                .add("ItemId", selecteditem)
+                .add("UserID", String.valueOf(userid))
+                .build();
 
-            RequestBody formBody = new FormBody.Builder()
-                    .add("Biography", bio)
-                    .add
-                    .add("ItemId",selecteditem)
-                    .add("UserID",userid)
-                    .build();
+        Request request = new Request.Builder()
+                .url("https://lamp.ms.wits.ac.za/home/s2801257/CRequest.php")
+                .post(formBody)
+                .build();
 
-            Request request = new Request.Builder()
-                    .url("https://lamp.ms.wits.ac.za/home/s2801257/Login.php")
-                    .post(formBody)
-                    .build();
-            client.newCall(request).enqueue(new Callback() {
-                @Override
-                public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                    e.printStackTrace();
-                    Toast.makeText(LoginActivity.this, "Network error", Toast.LENGTH_SHORT).show();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                requireActivity().runOnUiThread(() ->
+                        Toast.makeText(getContext(), "Network error", Toast.LENGTH_SHORT).show()
+                );
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    requireActivity().runOnUiThread(() ->
+                            Toast.makeText(getContext(), "server error " + response.code(), Toast.LENGTH_SHORT).show()
+                    );
+                    return;
                 }
 
-                @Override
-                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                    if (!response.isSuccessful()) {
-                        throw new IOException("Unexpected code " + response);
+                final String responseData = response.body().string();
+
+                requireActivity().runOnUiThread(() -> {
+                    try {
+                        JSONObject json = new JSONObject(responseData);
+
+                        if (json.has("success")) {
+                            Toast.makeText(getContext(), "Item inserted successfully!", Toast.LENGTH_SHORT).show();
+                        } else if (json.has("error")) {
+                            Toast.makeText(getContext(), "Error: " + json.getString("error"), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), "Unexpected response", Toast.LENGTH_SHORT).show();
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(getContext(), "Parsing error", Toast.LENGTH_SHORT).show();
                     }
+                });
+            }
+        });
+    }
+}
 
-                    final String responseData = response.body().string();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try{
-
-                                JSONObject person= new JSONObject(responseData);
-                                int size = person.length();
-                                if(size == 1 ) {
-                                    if(person.getString("error").equals("Incorrect password.")){
-                                        Toast.makeText(LoginActivity.this, "Wrong  password", Toast.LENGTH_SHORT).show();
-                                    }
-                                    else {
-                                        Toast.makeText(LoginActivity.this, "User does not exist", Toast.LENGTH_SHORT).show();
-                                    }
-
-                                }
