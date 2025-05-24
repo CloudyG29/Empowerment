@@ -1,31 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:id="@+id/constraintLayout"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
     android:background="@drawable/fragbackground"
+    android:clipToPadding="false"
+    android:fitsSystemWindows="true"
+    android:paddingBottom="100dp"
     tools:context=".EmpowerFragment">
+
+    <View
+        android:id="@+id/view5"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:background="@drawable/box"
+        android:padding="28dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_conversion_absoluteHeight="478dp"
+        tools:layout_conversion_absoluteWidth="302dp" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="28dp"
+        android:text="Empower"
+        android:textColor="@color/black"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/view5"
+        app:layout_constraintStart_toStartOf="@+id/view5"
+        app:layout_constraintTop_toTopOf="@+id/view5"
+        tools:layout_conversion_absoluteHeight="35dp"
+        tools:layout_conversion_absoluteWidth="174dp" />
 
     <Spinner
         android:id="@+id/itemSpinner"
-        android:layout_width="match_parent"
-        android:layout_height="251dp" />
+        android:layout_width="256dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="28dp"
+        android:background="@drawable/edittext"
+        android:padding="10dp"
+        app:layout_constraintEnd_toEndOf="@+id/view5"
+        app:layout_constraintStart_toStartOf="@+id/view5"
+        app:layout_constraintTop_toBottomOf="@+id/textView6"
+        tools:layout_conversion_absoluteHeight="42dp"
+        tools:layout_conversion_absoluteWidth="256dp" />
 
     <EditText
         android:id="@+id/quantity"
-        android:layout_width="wrap_content"
-        android:layout_height="231dp"
-        android:layout_weight="1"
+        android:layout_width="256dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="28dp"
+        android:background="@drawable/edittext"
         android:ems="10"
         android:hint="Quantity"
-        android:inputType="number" />
+        android:inputType="number"
+        android:padding="10dp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/material_dynamic_neutral30"
+        app:layout_constraintEnd_toEndOf="@+id/view5"
+        app:layout_constraintStart_toStartOf="@+id/view5"
+        app:layout_constraintTop_toBottomOf="@+id/itemSpinner"
+        tools:layout_conversion_absoluteHeight="44dp"
+        tools:layout_conversion_absoluteWidth="256dp" />
 
     <Button
         android:id="@+id/addbtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="add" />
+        android:layout_margin="28dp"
+        android:backgroundTint="@color/yellow"
+        android:text="Button"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="@+id/view5"
+        app:layout_constraintEnd_toEndOf="@+id/view5"
+        app:layout_constraintStart_toStartOf="@+id/view5"
+        app:layout_constraintTop_toBottomOf="@+id/quantity" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,36 +2,41 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/profile_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context=".ui.profile.ProfileFragment"
-    android:id="@+id/profile_container">
+    android:paddingBottom="100dp"
+    android:clipToPadding="false"
+    >
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nested_nav_host"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:navGraph="@navigation/profile_fragments"
-        app:defaultNavHost="false" />
+        app:defaultNavHost="false"
+        app:navGraph="@navigation/profile_fragments" />
 
 
     <ImageView
         android:id="@+id/text_profile"
         android:layout_width="match_parent"
         android:layout_height="236dp"
-        android:layout_marginBottom="684dp"
-        android:paddingTop="0dp"
-        android:src="@drawable/rectangle_1"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toTopOf="@+id/profile_image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/rectangle_1" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_image"
-        android:layout_width="233dp"
-        android:layout_height="211dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:src="@drawable/profile"
         app:civ_border_color="#1E52BA"
         app:civ_border_width="3dp"
@@ -72,18 +77,6 @@
         app:layout_constraintTop_toBottomOf="@+id/profile_name"
         app:layout_constraintVertical_bias="0.0" />
 
-    <View
-        android:id="@+id/divider3"
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:background="#fff"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile_email"
-        app:layout_constraintVertical_bias="0.024" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -92,8 +85,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider3"
+        app:layout_constraintTop_toBottomOf="@+id/profile_email"
         app:layout_constraintVertical_bias="0.0">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -104,8 +98,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:src="@drawable/notificationsb"
-                android:elevation="8dp"/>
+                android:elevation="8dp"
+                android:src="@drawable/notificationsb" />
         </LinearLayout>
 
         <LinearLayout
