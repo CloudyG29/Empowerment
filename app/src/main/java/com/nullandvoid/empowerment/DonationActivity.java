@@ -3,6 +3,8 @@ package com.nullandvoid.empowerment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -37,6 +39,7 @@ public class DonationActivity extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     String userid;
     public static JSONArray donation;
+    private ProgressBar loadingPB;
     OkHttpClient client = new OkHttpClient();
 
     @Override
@@ -52,6 +55,8 @@ public class DonationActivity extends AppCompatActivity {
 
         sharedPreferences = getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
         userid = sharedPreferences.getString(USER_KEY, null);
+        loadingPB = findViewById(R.id.progressBar);
+        loadingPB.setVisibility(View.VISIBLE);
         fetchDonations(userid);
     }
 
@@ -115,6 +120,7 @@ public class DonationActivity extends AppCompatActivity {
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
+                        loadingPB.setVisibility(View.GONE);
                     }
                 });
 

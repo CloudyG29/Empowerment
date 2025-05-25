@@ -3,6 +3,8 @@ package com.nullandvoid.empowerment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -31,6 +33,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class RequestsActivity extends AppCompatActivity {
+    private ProgressBar loadingPB;
 
     public static final String SHARED_PREFS = "shared_prefs";
     public static final String USER_KEY = "user_key";
@@ -52,7 +55,10 @@ public class RequestsActivity extends AppCompatActivity {
 
         sharedPreferences = getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
         userid = sharedPreferences.getString(USER_KEY, null);
+        loadingPB = findViewById(R.id.progressBar);
+        loadingPB.setVisibility(View.VISIBLE);
         fetchRequests(userid);
+
     }
 
     public void fetchRequests(String userid) {
@@ -84,7 +90,6 @@ public class RequestsActivity extends AppCompatActivity {
                     public void run() {
 
                         try{
-
                             if (responseData.trim().startsWith("[")) {
                                 System.out.println(responseData);
                                 requests = new JSONArray(responseData);
@@ -116,6 +121,7 @@ public class RequestsActivity extends AppCompatActivity {
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
+                        loadingPB.setVisibility(View.GONE);
                     }
                 });
 

@@ -3,7 +3,9 @@ package com.nullandvoid.empowerment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +41,7 @@ public class NotificationsActivity extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     String userid;
     public static JSONArray messages;
+    private ProgressBar loadingPB;
     OkHttpClient client = new OkHttpClient();
 
     @Override
@@ -54,6 +57,8 @@ public class NotificationsActivity extends AppCompatActivity {
 
         sharedPreferences = getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
         userid = sharedPreferences.getString(USER_KEY, null);
+        loadingPB = findViewById(R.id.progressBar);
+        loadingPB.setVisibility(View.VISIBLE);
         fetchMessages(userid);
     }
 
@@ -122,6 +127,7 @@ public class NotificationsActivity extends AppCompatActivity {
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
+                        loadingPB.setVisibility(View.GONE);
                     }
                 });
 
