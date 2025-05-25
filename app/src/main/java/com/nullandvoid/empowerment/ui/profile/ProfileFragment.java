@@ -15,17 +15,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.nullandvoid.empowerment.DonationActivity;
 import com.nullandvoid.empowerment.LoginActivity;
+import com.nullandvoid.empowerment.NotificationsActivity;
 import com.nullandvoid.empowerment.R;
+import com.nullandvoid.empowerment.RequestsActivity;
 import com.nullandvoid.empowerment.databinding.FragmentProfileBinding;
 
 public class ProfileFragment extends Fragment {
@@ -38,10 +38,8 @@ public class ProfileFragment extends Fragment {
     String userid, email, name, surname;
     private FragmentProfileBinding binding;
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        ProfileViewModel profileViewModel =
-                new ViewModelProvider(this).get(ProfileViewModel.class);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        ProfileViewModel profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
 
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -74,61 +72,36 @@ public class ProfileFragment extends Fragment {
         ImageView donation_img = root.findViewById(R.id.donation_bar);
         ImageView request_img = root.findViewById(R.id.request_bar);
         ImageView logout_img = root.findViewById(R.id.logout_bar);
-        //NavController nestedNavController = Navigation.findNavController(View.findViewById(R.id.nested_nav_host));
+        //FragmentContainerView nestedHost = root.findViewById(R.id.nested_nav_host);
+
+
+
 
         View.OnClickListener notificationClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Go to Notifications
-               /* Intent intent = new Intent(getContext(), NotificationFragment.class);
-                startActivity(intent);*/
-                //BottomNavigationView nav = requireActivity().findViewById(R.id.nav_view);
-                //nav.setVisibility(View.GONE);
-
-                /*FragmentManager fragmentManager = getParentFragmentManager();
-                fragmentManager.beginTransaction()
-                        .replace(R.id.nav_host_fragment_activity_menu, new NotificationFragment())
-                        //.addToBackStack(null)
-                        .commit();
-                 */
-
-                //nestedNavController.navigate(R.id.notificationFragment);
+                Intent intent = new Intent(getContext(), NotificationsActivity.class);
+                startActivity(intent);
+                //requireActivity().finish();
             }
         };
         View.OnClickListener donationsClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Go to donations
-                /*Intent intent = new Intent(getContext(), DonationsFragment.class);
-                startActivity(intent);*/
-                /*BottomNavigationView nav = requireActivity().findViewById(R.id.nav_view);
-                nav.setVisibility(View.GONE);
-
-               /* FragmentManager fragmentManager = getParentFragmentManager();
-                fragmentManager.beginTransaction()
-                        .replace(R.id.nav_host_fragment_activity_menu, new DonationsFragment())
-                        .addToBackStack(null)
-                        .commit();
-                */
-
-                //nestedNavController.navigate(R.id.donationFragment);
-
+                Intent intent = new Intent(getContext(), DonationActivity.class);
+                startActivity(intent);
+                //requireActivity().finish();
             }
         };
         View.OnClickListener requestsClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Go to requests
-                /* Intent intent = new Intent(getContext(), RequestsFragment.class);
-                startActivity(intent);*/
-
-                /*FragmentManager fragmentManager = getParentFragmentManager();
-                fragmentManager.beginTransaction()
-                        .replace(R.id.profile_container, new RequestsFragment())
-                        .addToBackStack(null)
-                        .commit();*/
-
-                //nestedNavController.navigate(R.id.requestFragment);
+                Intent intent = new Intent(getContext(), RequestsActivity.class);
+                startActivity(intent);
+                //requireActivity().finish();
 
             }
         };
@@ -169,19 +142,6 @@ public class ProfileFragment extends Fragment {
         donation_img.setOnClickListener(donationsClickListener);
         request_img.setOnClickListener(requestsClickListener);
         logout_img.setOnClickListener(logoutClickListener);
-
-        /*requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),
-                new OnBackPressedCallback(true) {
-                    @Override
-                    public void handleOnBackPressed() {
-                        if (!nestedNavController.popBackStack()) {
-                            // Optionally exit or let parent handle it
-                            setEnabled(false);
-                            requireActivity().onBackPressed();
-                        }
-                    }
-                });*/
-
 
         return root;
     }
