@@ -5,7 +5,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.graphics.Color;
+import android.text.TextUtils; // Import for TextUtils
+import android.util.Patterns;
 
 
 import androidx.activity.EdgeToEdge;
@@ -69,8 +73,8 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if (!response.isSuccessful()) {
-                    throw new IOException("Unexpected code " + response);
 
+                    throw new IOException("Unexpected code " + response);
                 }
 
                 final String responseData = response.body().string();
@@ -81,6 +85,7 @@ public class SignupActivity extends AppCompatActivity {
                             JSONObject person = new JSONObject(responseData);
                             Toast.makeText(SignupActivity.this, person.getString("status"), Toast.LENGTH_SHORT).show();
                             if(person.getString("status").equals("success")) {
+                                Toast.makeText(SignupActivity.this, "Check your email to verify your account.", Toast.LENGTH_LONG).show();
                                 Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
                                 startActivity(intent);
                                 finish();
@@ -95,26 +100,102 @@ public class SignupActivity extends AppCompatActivity {
             }
         });
     }
+
+    private boolean isValidEmail(CharSequence email) {
+        if (TextUtils.isEmpty(email)) {
+            return false;
+        } else {
+            return Patterns.EMAIL_ADDRESS.matcher(email).matches();
+        }
+    }
     public void register(@NonNull View view) {
+        boolean allValid = false;
         EditText name = findViewById(R.id.name);
         EditText surname = findViewById(R.id.surname);
         EditText email = findViewById(R.id.editTextTextEmailAddress);
         EditText password = findViewById(R.id.password);
+        EditText passwordConfirm = findViewById(R.id.passwordConfirm);
+        TextView passInfo = findViewById(R.id.passInfo);
         String Password = "";
         String UserEmail = "";
         String Name = "";
         String Surname = "";
-        if(!email.getText().toString().equals("") && !password.getText().toString().equals("") && !name.getText().toString().equals("") && !surname.getText().toString().equals("")) {
-            Password = password.getText().toString();
+        String PasswordConfirm = "";
+
+        name.setBackgroundResource(R.drawable.edittext);
+        surname.setBackgroundResource(R.drawable.edittext);
+        passInfo.setTextColor(Color.DKGRAY); // Reset to default or your 'normal' color
+        email.setBackgroundResource(R.drawable.edittext); // Reset background (use your default)
+        password.setBackgroundResource(R.drawable.edittext);
+        passwordConfirm.setBackgroundResource(R.drawable.edittext);
+
+        if(!email.getText().toString().equals("") && !password.getText().toString().equals("") && !name.getText().toString().equals("") && !surname.getText().toString().equals("") && !passwordConfirm.getText().toString().equals("")) {
+
+            if (!isValidEmail(email.getText().toString())) {
+                email.setBackgroundResource(R.drawable.erroredit); // Highlight email field
+                Toast.makeText(SignupActivity.this, "Invalid email address!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (password.getText().toString().length() < 8) {
+                passInfo.setTextColor(Color.parseColor("#FF0000"));
+                password.setBackgroundResource(R.drawable.erroredit);
+                Toast.makeText(SignupActivity.this, "Password must be at least 8 characters long!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (!password.getText().toString().matches(".*[A-Z].*")) {
+                passInfo.setTextColor(Color.parseColor("#FF0000"));
+                password.setBackgroundResource(R.drawable.erroredit);
+                Toast.makeText(SignupActivity.this, "Password must contain at least one uppercase letter!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (!password.getText().toString().matches(".*[a-z].*")) {
+                passInfo.setTextColor(Color.parseColor("#FF0000"));
+                password.setBackgroundResource(R.drawable.erroredit);
+                Toast.makeText(SignupActivity.this, "Password must contain at least one lowercase letter!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (!password.getText().toString().matches(".*\\d.*")) {
+                passInfo.setTextColor(Color.parseColor("#FF0000"));
+                password.setBackgroundResource(R.drawable.erroredit);
+                Toast.makeText(SignupActivity.this, "Password must contain at least one number!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (!password.getText().toString().matches(".*[!@#$%^&*()].*")) {
+                passInfo.setTextColor(Color.parseColor("#FF0000"));
+                password.setBackgroundResource(R.drawable.erroredit);
+                Toast.makeText(SignupActivity.this, "Password must contain at least one special character!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (!password.getText().toString().equals(passwordConfirm.getText().toString())) {
+                passInfo.setTextColor(Color.parseColor("#FF0000"));
+                password.setBackgroundResource(R.drawable.erroredit);
+                Toast.makeText(SignupActivity.this, "Passwords do not match!", Toast.LENGTH_SHORT).show();
+                return;
+            } else {
+                Password = password.getText().toString();
+            }
             UserEmail = email.getText().toString();
             Name = name.getText().toString();
             Surname = surname.getText().toString();
         }
         else {
+            password.setBackgroundResource(R.drawable.erroredit);
+            passwordConfirm.setBackgroundResource(R.drawable.erroredit);
             Toast.makeText(SignupActivity.this, "Empty field!", Toast.LENGTH_SHORT).show();
+            if (TextUtils.isEmpty(name.getText().toString())) name.setBackgroundResource(R.drawable.erroredit);
+            if (TextUtils.isEmpty(surname.getText().toString())) surname.setBackgroundResource(R.drawable.erroredit);
+            if (TextUtils.isEmpty(email.getText().toString())) email.setBackgroundResource(R.drawable.erroredit);
+            if (TextUtils.isEmpty(password.getText().toString())) password.setBackgroundResource(R.drawable.erroredit);
+            if (TextUtils.isEmpty(passwordConfirm.getText().toString())) passwordConfirm.setBackgroundResource(R.drawable.erroredit);
+            return;
 
     }
-        Register(Name, Surname, UserEmail, Password);
+        allValid = true;
+        if (allValid) {
+            Register(Name, Surname, UserEmail, Password);
+        }
     }
 
     public void goLogin(View view) {

@@ -5,7 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/fragbackground"
-    tools:context=".ui.dashboard.BeEmpoweredFragment">
+    tools:context=".ui.dashboard.BeEmpoweredFragment"
+    android:fitsSystemWindows="true"
+    android:paddingBottom="80dp"
+    android:clipToPadding="false">
 
     <View
         android:id="@+id/view2"

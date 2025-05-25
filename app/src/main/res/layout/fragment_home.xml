@@ -6,7 +6,10 @@
     android:layout_height="match_parent"
     android:background="@drawable/fragbackground"
     android:padding="10dp"
-    tools:context=".ui.home.HomeFragment">
+    tools:context=".ui.home.HomeFragment"
+    android:fitsSystemWindows="true"
+    android:paddingBottom="100dp"
+    android:clipToPadding="false">
 
 
     <Spinner
