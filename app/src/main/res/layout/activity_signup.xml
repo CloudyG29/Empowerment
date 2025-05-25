@@ -10,8 +10,8 @@
 
     <View
         android:id="@+id/view"
-        android:layout_width="318dp"
-        android:layout_height="526dp"
+        android:layout_width="316dp"
+        android:layout_height="547dp"
         android:background="@drawable/box"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -101,10 +101,10 @@
 
 
     <EditText
-        android:id="@+id/editTextTextPassword2"
+        android:id="@+id/passwordConfirm"
         android:layout_width="256dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/edittext"
         android:ems="10"
         android:hint="Confirm Password"
@@ -114,9 +114,8 @@
         android:textColorHint="@color/material_dynamic_neutral30"
         android:textColorLink="@color/black"
         app:layout_constraintEnd_toEndOf="@+id/view"
-        app:layout_constraintHorizontal_bias="0.507"
         app:layout_constraintStart_toStartOf="@+id/view"
-        app:layout_constraintTop_toBottomOf="@+id/password" />
+        app:layout_constraintTop_toBottomOf="@+id/passInfo" />
 
     <Button
         android:id="@+id/sign_button"
@@ -129,7 +128,7 @@
         app:layout_constraintEnd_toEndOf="@+id/view"
         app:layout_constraintHorizontal_bias="0.486"
         app:layout_constraintStart_toStartOf="@+id/view"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword2" />
+        app:layout_constraintTop_toBottomOf="@+id/passwordConfirm" />
 
     <TextView
         android:id="@+id/textView3"
@@ -146,5 +145,17 @@
         app:layout_constraintStart_toStartOf="@+id/view"
         app:layout_constraintTop_toBottomOf="@+id/sign_button"
         app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/passInfo"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Password must contain atleast 8 characters and atleast: 1 uppercase, 1 lowercase, 1 number, 1 special character(!@#$%&amp;()^*)"
+        android:textSize="10sp"
+        app:layout_constraintEnd_toEndOf="@+id/view"
+        app:layout_constraintHorizontal_bias="0.544"
+        app:layout_constraintStart_toStartOf="@+id/view"
+        app:layout_constraintTop_toBottomOf="@+id/password" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
