@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -50,12 +51,16 @@ import okhttp3.Response;
 
 public class HomeFragment extends Fragment {
 
+    public HomeFragment(){
+
+    }
+
     private FragmentHomeBinding binding;
     public Spinner myyspinner;
     OkHttpClient client=new OkHttpClient();
     private RecyclerView recyclerView;
     private RequestUserAdapter adapter;
-     public String selecteditem;
+    public String selecteditem;
 
 
     private List<RequestUser> userList = new ArrayList<>();
@@ -86,6 +91,8 @@ public class HomeFragment extends Fragment {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
         });
+
+
         fetchItemsFromServer();
 
         return root;
