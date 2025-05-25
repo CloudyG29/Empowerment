@@ -42,9 +42,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="76dp"
-        android:layout_marginBottom="32dp"
         android:text="quantity"
-        app:layout_constraintBottom_toTopOf="@+id/quantity_willing"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/surname_of"
         app:layout_constraintTop_toTopOf="parent" />
@@ -68,30 +66,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="142dp"
-        android:layout_marginTop="51dp"
         android:layout_marginEnd="176dp"
         android:layout_marginBottom="261dp"
         android:text="Donate"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/quantity_willing" />
-
-    <EditText
-        android:id="@+id/quantity_willing"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="162dp"
-        android:layout_marginTop="234dp"
-        android:layout_marginEnd="40dp"
-        android:layout_marginBottom="47dp"
-        android:ems="10"
-        android:hint="how much are you donating"
-        android:inputType="text"
-        app:layout_constraintBottom_toTopOf="@+id/donate"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/quantity_of" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/back"
@@ -106,4 +86,14 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/quantity_willing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="how much are you donating"
+        android:inputType="number"
+        tools:layout_editor_absoluteX="113dp"
+        tools:layout_editor_absoluteY="302dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -56,6 +56,7 @@ public class RequestUserAdapter extends RecyclerView.Adapter<RequestUserAdapter.
         holder.itemView.setOnClickListener(v->{
             Intent intent=new Intent(context, ConfirmEmp.class);
             intent.putExtra("name",user.name);
+
             intent.putExtra("surname",user.surname);
             intent.putExtra("quantity",user.quantity);
             intent.putExtra("biography",user.biography);
