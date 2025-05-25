@@ -16,8 +16,9 @@
         android:theme="@style/Theme.Empowerment"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
-            android:exported="false" />
+            android:name="com.nullandvoid.empowerment.ui.dashboard.ConfirmEmp" />
+             />
+
         <activity
             android:name=".Menu"
             android:exported="false"

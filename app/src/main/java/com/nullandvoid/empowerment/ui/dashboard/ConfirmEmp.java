@@ -1,6 +1,8 @@
 package com.nullandvoid.empowerment.ui.dashboard;
 
 import android.os.Bundle;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,7 +22,25 @@ public class ConfirmEmp extends AppCompatActivity {
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            String name=getIntent().getStringExtra("name");
+            String surname=getIntent().getStringExtra("surname");
+            String quantity=getIntent().getStringExtra("quantity");
+            String biography=getIntent().getStringExtra("biography");
+
+            TextView name_of=findViewById(R.id.name_of);
+            name_of.setText(name);
+            TextView surname_of=findViewById(R.id.surname_of);
+            surname_of.setText(surname);
+            TextView quantity_of=findViewById(R.id.quantity_of);
+            quantity_of.setText(quantity);
+            TextView bio_of=findViewById(R.id.bio_of);
+            bio_of.setText(biography);
+
+
             return insets;
+
+
+
         });
     }
 }

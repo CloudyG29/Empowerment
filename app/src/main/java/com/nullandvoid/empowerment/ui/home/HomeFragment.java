@@ -68,8 +68,9 @@ public class HomeFragment extends Fragment {
 
         myyspinner = root.findViewById(R.id.myyspinner);
         recyclerView = root.findViewById(R.id.requestRecyclerView);
-        adapter = new RequestUserAdapter(userList);
+        adapter = new RequestUserAdapter(userList,requireContext());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
         recyclerView.setAdapter(adapter);
 
         loadSpinnerItems();
