@@ -69,8 +69,8 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if (!response.isSuccessful()) {
-
                     throw new IOException("Unexpected code " + response);
+
                 }
 
                 final String responseData = response.body().string();
@@ -104,14 +104,13 @@ public class SignupActivity extends AppCompatActivity {
         String UserEmail = "";
         String Name = "";
         String Surname = "";
-        if(!email.getText().toString().equals("") && !password.getText().toString().equals("")) {
+        if(!email.getText().toString().equals("") && !password.getText().toString().equals("") && !name.getText().toString().equals("") && !surname.getText().toString().equals("")) {
             Password = password.getText().toString();
             UserEmail = email.getText().toString();
             Name = name.getText().toString();
             Surname = surname.getText().toString();
         }
         else {
-            //Toast.makeText(getContext(), "Empty field!", Toast.LENGTH_SHORT).show();
             Toast.makeText(SignupActivity.this, "Empty field!", Toast.LENGTH_SHORT).show();
 
     }
