@@ -58,6 +58,7 @@ public class ConfirmEmp extends AppCompatActivity {
              donatee_name=getIntent().getStringExtra("name");
            donatee_surname=getIntent().getStringExtra("surname");
              donatee_biography=getIntent().getStringExtra("biography");
+            get_userid();
 
 
 
@@ -65,23 +66,26 @@ public class ConfirmEmp extends AppCompatActivity {
             TextView surname_of=findViewById(R.id.surname_of);surname_of.setText(donatee_surname);
             TextView quantity_of=findViewById(R.id.quantity_of);quantity_of.setText(donatee_quantity);
             TextView bio_of=findViewById(R.id.bio_of);bio_of.setText(donatee_biography);
-                EditText lquantity = findViewById(R.id.quantity_willing);
-            if(lquantity.getText().toString().isEmpty()){
-                lquantity.setText("0");
-            }else {
-                int quantity = Integer.parseInt(lquantity.getText().toString());
-            }
+
             sharedPreferences = getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
             donater_userid = sharedPreferences.getString(USER_KEY, null);
             donater_email = sharedPreferences.getString(EMAIL_KEY, null);
             donater_name = sharedPreferences.getString(NAME_KEY, null);
             donater_surname = sharedPreferences.getString(SURNAME_KEY, null);
-            get_userid();
-            Button donate=findViewById(R.id.donate);
+            Button donate = findViewById(R.id.donate);
             donate.setOnClickListener(v1 -> {
+                EditText lquantity = findViewById(R.id.quantity_willing);
+                String input = lquantity.getText().toString().trim();
 
+                if (input.isEmpty()) {
+                    Toast.makeText(this, "Please enter a quantity", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                quantity = Integer.parseInt(input);
                 final_donation();
             });
+
 
             return insets;
         });
