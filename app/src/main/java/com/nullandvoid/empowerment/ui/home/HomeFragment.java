@@ -199,6 +199,15 @@ public class HomeFragment extends Fragment {
                     JSONArray array=new JSONArray(responseData);
                     List<RequestUser> tempList=new ArrayList<>();
 
+                    if (array.length() == 0) {
+                        requireActivity().runOnUiThread(() -> {
+                            adapter.updateData(new ArrayList<>()); // ✅ Clear the RecyclerView
+                            Toast.makeText(getContext(), "No users requested this item.", Toast.LENGTH_SHORT).show();
+                        });
+                        return;
+                    }
+
+
                     for (int i = 0; i < array.length(); i++) {
                         JSONObject obj = array.getJSONObject(i);
 
@@ -214,7 +223,9 @@ public class HomeFragment extends Fragment {
                     });
 
                 } catch (JSONException e) {
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
+                    requireActivity().runOnUiThread(() ->
+                            Toast.makeText(getContext(), "Error parsing data", Toast.LENGTH_SHORT).show());
                 }
 
                 }
