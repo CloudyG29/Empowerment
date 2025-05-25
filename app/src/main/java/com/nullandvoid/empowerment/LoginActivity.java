@@ -103,15 +103,18 @@ public class LoginActivity extends AppCompatActivity {
                             JSONObject person= new JSONObject(responseData);
                             int size = person.length();
                             if(size == 1 ) {
-                                if(person.getString("error").equals("Incorrect password.")){
-                                    Toast.makeText(LoginActivity.this, "Wrong  password", Toast.LENGTH_SHORT).show();
+                                if (person.has("error")) {
+                                    String error = person.getString("error");
+                                    if (error.equals("Please verify your email address before logging in.")) {
+                                        Toast.makeText(LoginActivity.this, "Please verify your email before logging in.", Toast.LENGTH_LONG).show();
+                                    } else if (error.equals("Incorrect password.")) {
+                                        Toast.makeText(LoginActivity.this, "Wrong password", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(LoginActivity.this, "User does not exist", Toast.LENGTH_SHORT).show();
+                                    }
                                 }
-                                else {
-                                    Toast.makeText(LoginActivity.this, "User does not exist", Toast.LENGTH_SHORT).show();
-                                }
-
-
                             }
+
                             else {
 
                                 Toast.makeText(LoginActivity.this, "Success", Toast.LENGTH_SHORT).show();
