@@ -8,16 +8,7 @@
     tools:context=".ui.profile.ProfileFragment"
     android:fitsSystemWindows="true"
     android:paddingBottom="100dp"
-    android:clipToPadding="false"
-    >
-
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/nested_nav_host"
-        android:name="androidx.navigation.fragment.NavHostFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:defaultNavHost="false"
-        app:navGraph="@navigation/profile_fragments" />
+    android:clipToPadding="false">
 
 
     <ImageView
