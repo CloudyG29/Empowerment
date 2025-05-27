@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -50,12 +51,16 @@ import okhttp3.Response;
 
 public class HomeFragment extends Fragment {
 
+    public HomeFragment(){
+
+    }
+
     private FragmentHomeBinding binding;
     public Spinner myyspinner;
     OkHttpClient client=new OkHttpClient();
     private RecyclerView recyclerView;
     private RequestUserAdapter adapter;
-     public String selecteditem;
+    public String selecteditem;
 
 
     private List<RequestUser> userList = new ArrayList<>();
@@ -68,8 +73,9 @@ public class HomeFragment extends Fragment {
 
         myyspinner = root.findViewById(R.id.myyspinner);
         recyclerView = root.findViewById(R.id.requestRecyclerView);
-        adapter = new RequestUserAdapter(userList);
+        adapter = new RequestUserAdapter(userList,requireContext());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
         recyclerView.setAdapter(adapter);
 
         loadSpinnerItems();
@@ -85,6 +91,8 @@ public class HomeFragment extends Fragment {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
         });
+
+
         fetchItemsFromServer();
 
         return root;
@@ -191,6 +199,15 @@ public class HomeFragment extends Fragment {
                     JSONArray array=new JSONArray(responseData);
                     List<RequestUser> tempList=new ArrayList<>();
 
+                    if (array.length() == 0) {
+                        requireActivity().runOnUiThread(() -> {
+                            adapter.updateData(new ArrayList<>()); // ✅ Clear the RecyclerView
+                            Toast.makeText(getContext(), "No users requested this item.", Toast.LENGTH_SHORT).show();
+                        });
+                        return;
+                    }
+
+
                     for (int i = 0; i < array.length(); i++) {
                         JSONObject obj = array.getJSONObject(i);
 
@@ -206,7 +223,9 @@ public class HomeFragment extends Fragment {
                     });
 
                 } catch (JSONException e) {
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
+                    requireActivity().runOnUiThread(() ->
+                            Toast.makeText(getContext(), "Error parsing data", Toast.LENGTH_SHORT).show());
                 }
 
                 }

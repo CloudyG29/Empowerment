@@ -12,4 +12,8 @@ public class RequestUser {
         this.quantity = quantity;
         this.biography = biography;
     }
+    public String getName() { return name; }
+    public String getSurname() { return surname; }
+    public int getQuantity() { return quantity; }
+    public String getBiography() { return biography; }
 }

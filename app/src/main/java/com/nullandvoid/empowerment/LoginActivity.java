@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +37,7 @@ public class LoginActivity extends AppCompatActivity {
     public static final String NAME_KEY = "name_key";
     public static final String USER_KEY = "user_key";
     public static final String SURNAME_KEY = "surname_key";
+    private ProgressBar loadingPB;
 
     SharedPreferences sharedPreferences;
     String userid, email, name, surname;
