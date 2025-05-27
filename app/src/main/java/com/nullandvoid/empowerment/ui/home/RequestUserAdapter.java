@@ -1,5 +1,7 @@
 package com.nullandvoid.empowerment.ui.home;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,14 +11,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.nullandvoid.empowerment.R;
+import com.nullandvoid.empowerment.ui.dashboard.ConfirmEmp;
 
 import java.util.List;
 
 public class RequestUserAdapter extends RecyclerView.Adapter<RequestUserAdapter.ViewHolder> {
     private List<RequestUser> userList;
-
-    public RequestUserAdapter(List<RequestUser> userList) {
+    private Context context;
+    public RequestUserAdapter( List<RequestUser> userList, Context context) {
         this.userList = userList;
+        this.context = context;
     }
     public void updateData(List<RequestUser> newList) {
         this.userList = newList;
@@ -49,6 +53,14 @@ public class RequestUserAdapter extends RecyclerView.Adapter<RequestUserAdapter.
         holder.name.setText(user.name + " " + user.surname);
         holder.quantity.setText("Quantity: " + user.quantity);
         holder.biography.setText("Bio: " + user.biography);
+        holder.itemView.setOnClickListener(v->{
+            Intent intent=new Intent(context, ConfirmEmp.class);
+            intent.putExtra("name",user.name);
+            intent.putExtra("surname",user.surname);
+            intent.putExtra("quantity",user.quantity);
+            intent.putExtra("biography",user.biography);
+            context.startActivity(intent);
+        });
     }
 
     @Override
