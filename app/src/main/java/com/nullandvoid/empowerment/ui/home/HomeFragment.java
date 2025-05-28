@@ -201,7 +201,7 @@ public class HomeFragment extends Fragment {
 
                     if (array.length() == 0) {
                         requireActivity().runOnUiThread(() -> {
-                            adapter.updateData(new ArrayList<>()); // ✅ Clear the RecyclerView
+                            adapter.updateData(new ArrayList<>());
                             Toast.makeText(getContext(), "No users requested this item.", Toast.LENGTH_SHORT).show();
                         });
                         return;
@@ -219,7 +219,7 @@ public class HomeFragment extends Fragment {
                         tempList.add(new RequestUser(name, surname, quantity, biography));
                     }
                     new Handler(Looper.getMainLooper()).post(() -> {
-                        adapter.updateData(tempList);  // This updates the RecyclerView
+                        adapter.updateData(tempList);
                     });
 
                 } catch (JSONException e) {

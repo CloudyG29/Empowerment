@@ -172,9 +172,9 @@ public class ConfirmEmp extends AppCompatActivity {
                 runOnUiThread(() -> {
                     try {
                         JSONObject json = new JSONObject(responseData);
-                        if (json.has("Error")) {
+                        if (json.getString("status").equals("Error")) {
                             Toast.makeText(ConfirmEmp.this, "Donation Unsuccessful", Toast.LENGTH_SHORT).show();
-                        } else if(json.has("Success"))  {
+                        } else if(json.getString("status").equals("Success"))  {
                            Toast.makeText(ConfirmEmp.this, "Donation Successful", Toast.LENGTH_SHORT).show();
                         }
 

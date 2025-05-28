@@ -118,7 +118,6 @@ public class LoginActivity extends AppCompatActivity {
                             }
 
                             else {
-
                                 Toast.makeText(LoginActivity.this, "Success", Toast.LENGTH_SHORT).show();
                                 SharedPreferences.Editor editor = sharedPreferences.edit();
                                 editor.putString(USER_KEY, person.getString("UserID"));
