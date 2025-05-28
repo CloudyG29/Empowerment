@@ -18,10 +18,14 @@ import java.util.List;
 public class RequestUserAdapter extends RecyclerView.Adapter<RequestUserAdapter.ViewHolder> {
     private List<RequestUser> userList;
     private Context context;
-    public RequestUserAdapter( List<RequestUser> userList, Context context) {
+    private String selecteditem;
+
+    public RequestUserAdapter(List<RequestUser> userList, Context context, String selecteditem) {
         this.userList = userList;
         this.context = context;
+        this.selecteditem = selecteditem;
     }
+
     public void updateData(List<RequestUser> newList) {
         this.userList = newList;
         notifyDataSetChanged();
@@ -57,8 +61,9 @@ public class RequestUserAdapter extends RecyclerView.Adapter<RequestUserAdapter.
             Intent intent=new Intent(context, ConfirmEmp.class);
             intent.putExtra("name",user.name);
             intent.putExtra("surname",user.surname);
-            intent.putExtra("quantity",user.quantity);
+            intent.putExtra("quantity",Integer.parseInt(String.valueOf(user.quantity)));
             intent.putExtra("biography",user.biography);
+            intent.putExtra("selectedItem", selecteditem);
             context.startActivity(intent);
         });
     }
@@ -67,5 +72,9 @@ public class RequestUserAdapter extends RecyclerView.Adapter<RequestUserAdapter.
     public int getItemCount() {
         return userList.size();
     }
+    public void setSelectedItem(String selecteditem) {
+        this.selecteditem = selecteditem;
+    }
+
 }
 

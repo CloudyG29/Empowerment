@@ -2,7 +2,6 @@ package com.nullandvoid.empowerment.ui.dashboard;
 
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -32,15 +31,14 @@ public class ConfirmEmp extends AppCompatActivity {
             String surname=getIntent().getStringExtra("surname");
             String quantity=getIntent().getStringExtra("quantity");
             String biography=getIntent().getStringExtra("biography");
+            String itemName =getIntent().getStringExtra("selectedItem");
 
             TextView name_of=findViewById(R.id.name_of);
-            name_of.setText(name);
-            TextView surname_of=findViewById(R.id.surname_of);
-            surname_of.setText(surname);
+            name_of.setText(name+" "+surname);
             TextView quantity_of=findViewById(R.id.quantity_of);
-            quantity_of.setText(quantity);
+            quantity_of.setText(itemName+": "+ quantity);
             TextView bio_of=findViewById(R.id.bio_of);
-            bio_of.setText(biography);
+            bio_of.setText("Biography:\n\n"+ biography);
 
 
             return insets;

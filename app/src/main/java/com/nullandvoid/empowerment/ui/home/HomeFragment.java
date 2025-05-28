@@ -73,7 +73,7 @@ public class HomeFragment extends Fragment {
 
         myyspinner = root.findViewById(R.id.myyspinner);
         recyclerView = root.findViewById(R.id.requestRecyclerView);
-        adapter = new RequestUserAdapter(userList,requireContext());
+        adapter = new RequestUserAdapter(userList, requireContext(), selecteditem);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         recyclerView.setAdapter(adapter);
@@ -85,13 +85,13 @@ public class HomeFragment extends Fragment {
                 String selectedItem = (String) myyspinner.getSelectedItem();
                 selecteditem=selectedItem;
                 getusers(selecteditem,adapter);
+                adapter.setSelectedItem(selecteditem);
 
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
         });
-
 
         fetchItemsFromServer();
 
@@ -185,7 +185,10 @@ public class HomeFragment extends Fragment {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 e.printStackTrace();
-                Toast.makeText(getContext(), "Network error", Toast.LENGTH_SHORT).show();
+                requireActivity().runOnUiThread(() -> {
+                    Toast.makeText(getContext(), "Network error", Toast.LENGTH_SHORT).show();
+                });
+
             }
 
             @Override
