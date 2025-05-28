@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,12 +29,17 @@ import com.nullandvoid.empowerment.R;
 import com.nullandvoid.empowerment.RequestsActivity;
 import com.nullandvoid.empowerment.databinding.FragmentProfileBinding;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class ProfileFragment extends Fragment {
     public static final String SHARED_PREFS = "shared_prefs";
     public static final String EMAIL_KEY = "email_key";
     public static final String NAME_KEY = "name_key";
     public static final String USER_KEY = "user_key";
     public static final String SURNAME_KEY = "surname_key";
+    private static final int PICK_IMAGE_REQUEST = 1;
+    private Uri imageUri;
+    private CircleImageView profileImage;
     SharedPreferences sharedPreferences;
     String userid, email, name, surname;
     private FragmentProfileBinding binding;
@@ -143,7 +149,18 @@ public class ProfileFragment extends Fragment {
         request_img.setOnClickListener(requestsClickListener);
         logout_img.setOnClickListener(logoutClickListener);
 
+
+        profileImage = root.findViewById(R.id.profile_image);
+
+        profileImage.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_PICK);
+            intent.setType("image/*");
+            startActivityForResult(intent, PICK_IMAGE_REQUEST);
+        });
+
         return root;
+
+
     }
 
     @Override
