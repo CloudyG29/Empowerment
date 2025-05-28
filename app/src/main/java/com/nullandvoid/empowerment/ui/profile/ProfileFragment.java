@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +28,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.bumptech.glide.Glide;
 import com.nullandvoid.empowerment.DonationActivity;
 import com.nullandvoid.empowerment.LoginActivity;
 import com.nullandvoid.empowerment.NotificationsActivity;
@@ -33,6 +36,9 @@ import com.nullandvoid.empowerment.R;
 import com.nullandvoid.empowerment.RequestsActivity;
 import com.nullandvoid.empowerment.databinding.FragmentProfileBinding;
 import com.yalantis.ucrop.UCrop;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -174,6 +180,18 @@ public class ProfileFragment extends Fragment {
             imagePickerLauncher.launch(intent);
         });
 
+        new Handler(Looper.getMainLooper()).post(() -> {
+            String profileImagePath = sharedPreferences.getString("profile_image_path", null);
+            if (profileImagePath != null) {
+                Glide.with(requireContext())
+                        .load(profileImagePath)
+                        .placeholder(R.drawable.default_profile)
+                        .thumbnail(0.1f) // tiny preview first
+                        .into(profileImage);
+            }
+        });
+
+
         return root;
 
 
@@ -196,12 +214,21 @@ public class ProfileFragment extends Fragment {
                     if (activity != null) {
                         UCrop.of(sourceUri, destinationUri)
                                 .withAspectRatio(1, 1)
-                                .withMaxResultSize(500, 500)
+                                .withMaxResultSize(300, 300) // or 200x200 if you're bold
+                                .withOptions(getCropOptions())
                                 .start(requireContext(), ProfileFragment.this, UCrop.REQUEST_CROP);
                     }
                 }
             }
     );
+    private UCrop.Options getCropOptions() {
+        UCrop.Options options = new UCrop.Options();
+        options.setCompressionQuality(70); // Compress more aggressively
+        options.setHideBottomControls(true);
+        options.setFreeStyleCropEnabled(false);
+        return options;
+    }
+
 
 
     @Override
@@ -223,7 +250,9 @@ public class ProfileFragment extends Fragment {
     private void uploadImageToServer(File imageFile) {
         OkHttpClient client = new OkHttpClient();
 
-        RequestBody fileBody = RequestBody.create(imageFile, MediaType.parse("image/jpeg"));
+        String mimeType = requireContext().getContentResolver().getType(Uri.fromFile(imageFile));
+        RequestBody fileBody = RequestBody.create(imageFile, MediaType.parse(mimeType != null ? mimeType : "image/jpeg"));
+
         MultipartBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("profile_image", imageFile.getName(), fileBody)
@@ -250,7 +279,30 @@ public class ProfileFragment extends Fragment {
 
                 requireActivity().runOnUiThread(() -> {
                     if (response.isSuccessful()) {
-                        Toast.makeText(getContext(), "Image uploaded!", Toast.LENGTH_SHORT).show();
+                        try {
+                            JSONObject json = new JSONObject(responseBody);
+                            if (json.getString("status").equals("success")) {
+                                String path = json.getString("path");
+                                String fullUrl = "https://lamp.ms.wits.ac.za/home/s2801257/" + path;
+
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putString("profile_image_path", fullUrl);
+                                editor.apply();
+
+                                Glide.with(requireContext())
+                                        .load(fullUrl)
+                                        .placeholder(R.drawable.default_profile)
+                                        .into(profileImage);
+
+                                Toast.makeText(getContext(), "Image uploaded!", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getContext(), "Upload failed: Server error", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            Toast.makeText(getContext(), "Upload failed: Invalid JSON", Toast.LENGTH_SHORT).show();
+                            Log.e("UPLOAD_JSON", "JSON parsing error: " + e.getMessage());
+                        }
+
                     } else {
                         Toast.makeText(getContext(), "Upload failed: " + response.message(), Toast.LENGTH_SHORT).show();
                     }
