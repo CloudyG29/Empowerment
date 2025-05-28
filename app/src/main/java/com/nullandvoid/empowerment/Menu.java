@@ -1,6 +1,9 @@
 package com.nullandvoid.empowerment;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
@@ -16,11 +19,12 @@ import androidx.navigation.ui.NavigationUI;
 import com.nullandvoid.empowerment.databinding.ActivityMenuBinding;
 
 public class Menu extends AppCompatActivity {
-
+    public static ProgressBar loader;
     private ActivityMenuBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
 
         binding = ActivityMenuBinding.inflate(getLayoutInflater());
@@ -36,10 +40,23 @@ public class Menu extends AppCompatActivity {
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_menu);
         NavigationUI.setupWithNavController(binding.navView, navController);
+        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+            showProgressBar();
+        });
 
+        loader = findViewById(R.id.progressBar2);
+    }
 
-        //TextView t = findViewById(R.id.textView2);
-        //t.setText("Mogomotsi");
+    public static void showProgressBar() {
+        if (loader != null) {
+            loader.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public static void hideProgressBar() {
+        if (loader != null) {
+            loader.setVisibility(View.GONE);
+        }
     }
 
 

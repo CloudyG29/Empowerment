@@ -1,5 +1,8 @@
 package com.nullandvoid.empowerment;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -41,6 +44,7 @@ public class LoginActivity extends AppCompatActivity {
 
     SharedPreferences sharedPreferences;
     String userid, email, name, surname;
+    ProgressBar loader;
     OkHttpClient client = new OkHttpClient();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +56,7 @@ public class LoginActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
+        loader = findViewById(R.id.progressBar2);
         sharedPreferences = getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
         userid = sharedPreferences.getString(USER_KEY, null);
         email = sharedPreferences.getString(EMAIL_KEY, null);
@@ -67,13 +71,13 @@ public class LoginActivity extends AppCompatActivity {
 
         Button b = findViewById(R.id.loginbtn);
         b.setOnClickListener(v -> {
+            loader.setVisibility(VISIBLE);
             login(v);
         });
 
     }
 
     public void Login(String Email, String password) {
-
         RequestBody formBody = new FormBody.Builder()
                 .add("email", Email)
                 .add("password", password)
@@ -93,6 +97,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if (!response.isSuccessful()) {
+                    //TODO: Someone must handle this so that the app doesnt crash when there is no internet connection
                     throw new IOException("Unexpected code " + response);
                 }
 
@@ -143,6 +148,7 @@ public class LoginActivity extends AppCompatActivity {
     }
     public void goSignup(View view) {
         Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
+        loader.setVisibility(VISIBLE);
         startActivity(intent);
         finish();
     }
