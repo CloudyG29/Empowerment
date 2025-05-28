@@ -1,5 +1,6 @@
 package com.nullandvoid.empowerment.ui.profile;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -9,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -28,8 +32,20 @@ import com.nullandvoid.empowerment.NotificationsActivity;
 import com.nullandvoid.empowerment.R;
 import com.nullandvoid.empowerment.RequestsActivity;
 import com.nullandvoid.empowerment.databinding.FragmentProfileBinding;
+import com.yalantis.ucrop.UCrop;
+
+import java.io.File;
+import java.io.IOException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class ProfileFragment extends Fragment {
     public static final String SHARED_PREFS = "shared_prefs";
@@ -155,7 +171,7 @@ public class ProfileFragment extends Fragment {
         profileImage.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_PICK);
             intent.setType("image/*");
-            startActivityForResult(intent, PICK_IMAGE_REQUEST);
+            imagePickerLauncher.launch(intent);
         });
 
         return root;
@@ -168,6 +184,81 @@ public class ProfileFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+    private final ActivityResultLauncher<Intent> imagePickerLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                    Uri sourceUri = result.getData().getData();
+
+                    Uri destinationUri = Uri.fromFile(new File(requireContext().getCacheDir(), "cropped.jpg"));
+
+                    Activity activity = getActivity();
+                    if (activity != null) {
+                        UCrop.of(sourceUri, destinationUri)
+                                .withAspectRatio(1, 1)
+                                .withMaxResultSize(500, 500)
+                                .start(requireContext(), ProfileFragment.this, UCrop.REQUEST_CROP);
+                    }
+                }
+            }
+    );
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == Activity.RESULT_OK && requestCode == UCrop.REQUEST_CROP) {
+            Uri croppedUri = UCrop.getOutput(data);
+            profileImage.setImageURI(croppedUri);// ✅ Show cropped image
+            File imageFile = new File(croppedUri.getPath());
+            uploadImageToServer(imageFile);
+
+            // TODO: upload croppedUri to server
+        } else if (resultCode == UCrop.RESULT_ERROR) {
+            Throwable cropError = UCrop.getError(data);
+            Toast.makeText(getContext(), "Crop failed: " + cropError.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+    private void uploadImageToServer(File imageFile) {
+        OkHttpClient client = new OkHttpClient();
+
+        RequestBody fileBody = RequestBody.create(imageFile, MediaType.parse("image/jpeg"));
+        MultipartBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("profile_image", imageFile.getName(), fileBody)
+                .addFormDataPart("user_id", userid) // important: send user ID
+                .build();
+
+        Request request = new Request.Builder()
+                .url("https://lamp.ms.wits.ac.za/home/s2801257/upload_image.php")  // 👈 Your actual PHP endpoint here
+                .post(requestBody)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                requireActivity().runOnUiThread(() ->
+                        Toast.makeText(getContext(), "Upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show()
+                );
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String responseBody = response.body().string();
+                Log.d("UPLOAD_RESPONSE", responseBody);
+
+                requireActivity().runOnUiThread(() -> {
+                    if (response.isSuccessful()) {
+                        Toast.makeText(getContext(), "Image uploaded!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(), "Upload failed: " + response.message(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+    }
+
 
 
 }
