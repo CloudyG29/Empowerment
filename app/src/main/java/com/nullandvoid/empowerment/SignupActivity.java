@@ -1,10 +1,13 @@
 package com.nullandvoid.empowerment;
 
+import static android.view.View.VISIBLE;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.graphics.Color;
@@ -33,6 +36,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class SignupActivity extends AppCompatActivity {
+    ProgressBar loader;
     OkHttpClient client = new OkHttpClient();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,9 +48,10 @@ public class SignupActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
+        loader = findViewById(R.id.progressBar2);
        Button b2 = findViewById(R.id.sign_button);
         b2.setOnClickListener(v -> {
+            loader.setVisibility(VISIBLE);
             register(v);
         });
     }
@@ -200,6 +205,7 @@ public class SignupActivity extends AppCompatActivity {
 
     public void goLogin(View view) {
         Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
+        loader.setVisibility(VISIBLE);
         startActivity(intent);
         finish();
     }

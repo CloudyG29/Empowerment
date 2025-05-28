@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.nullandvoid.empowerment.LoginActivity;
+import com.nullandvoid.empowerment.Menu;
 import com.nullandvoid.empowerment.R;
 import com.nullandvoid.empowerment.databinding.FragmentBeempoweredBinding;
 
@@ -119,6 +120,7 @@ public class BeEmpoweredFragment extends Fragment {
 
 
 
+        Menu.hideProgressBar();
         return root;
     }
 

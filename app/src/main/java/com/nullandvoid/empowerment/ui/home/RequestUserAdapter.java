@@ -1,15 +1,20 @@
 package com.nullandvoid.empowerment.ui.home;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.nullandvoid.empowerment.Menu;
 import com.nullandvoid.empowerment.R;
 import com.nullandvoid.empowerment.ui.dashboard.ConfirmEmp;
 
@@ -18,10 +23,14 @@ import java.util.List;
 public class RequestUserAdapter extends RecyclerView.Adapter<RequestUserAdapter.ViewHolder> {
     private List<RequestUser> userList;
     private Context context;
-    public RequestUserAdapter( List<RequestUser> userList, Context context) {
+    private String selecteditem;
+
+    public RequestUserAdapter(List<RequestUser> userList, Context context, String selecteditem) {
         this.userList = userList;
         this.context = context;
+        this.selecteditem = selecteditem;
     }
+
     public void updateData(List<RequestUser> newList) {
         this.userList = newList;
         notifyDataSetChanged();
@@ -44,6 +53,7 @@ public class RequestUserAdapter extends RecyclerView.Adapter<RequestUserAdapter.
     public RequestUserAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_user_request, parent, false);
+
         return new ViewHolder(view);
     }
 
@@ -55,11 +65,13 @@ public class RequestUserAdapter extends RecyclerView.Adapter<RequestUserAdapter.
         holder.biography.setText("Bio: " + user.biography);
         holder.itemView.setOnClickListener(v->{
             Intent intent=new Intent(context, ConfirmEmp.class);
+            Menu.showProgressBar();
             intent.putExtra("name",user.name);
 
             intent.putExtra("surname",user.surname);
-            intent.putExtra("quantity",user.quantity);
+            intent.putExtra("quantity",Integer.parseInt(String.valueOf(user.quantity)));
             intent.putExtra("biography",user.biography);
+            intent.putExtra("selectedItem", selecteditem);
             context.startActivity(intent);
         });
     }
@@ -68,5 +80,9 @@ public class RequestUserAdapter extends RecyclerView.Adapter<RequestUserAdapter.
     public int getItemCount() {
         return userList.size();
     }
+    public void setSelectedItem(String selecteditem) {
+        this.selecteditem = selecteditem;
+    }
+
 }
 

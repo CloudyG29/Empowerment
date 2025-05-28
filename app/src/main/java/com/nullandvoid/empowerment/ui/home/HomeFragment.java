@@ -65,15 +65,16 @@ public class HomeFragment extends Fragment {
 
     private List<RequestUser> userList = new ArrayList<>();
 
-
+//TODO: consider using tooltips instead of toasts
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         myyspinner = root.findViewById(R.id.myyspinner);
         recyclerView = root.findViewById(R.id.requestRecyclerView);
-        adapter = new RequestUserAdapter(userList,requireContext());
+        adapter = new RequestUserAdapter(userList, requireContext(), selecteditem);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         recyclerView.setAdapter(adapter);
@@ -85,6 +86,7 @@ public class HomeFragment extends Fragment {
                 String selectedItem = (String) myyspinner.getSelectedItem();
                 selecteditem=selectedItem;
                 getusers(selecteditem,adapter);
+                adapter.setSelectedItem(selecteditem);
 
             }
 
@@ -92,9 +94,8 @@ public class HomeFragment extends Fragment {
             public void onNothingSelected(AdapterView<?> parent) {}
         });
 
-
         fetchItemsFromServer();
-
+        Menu.hideProgressBar();
         return root;
     }
 
@@ -185,7 +186,10 @@ public class HomeFragment extends Fragment {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 e.printStackTrace();
-                Toast.makeText(getContext(), "Network error", Toast.LENGTH_SHORT).show();
+                requireActivity().runOnUiThread(() -> {
+                    Toast.makeText(getContext(), "Network error", Toast.LENGTH_SHORT).show();
+                });
+
             }
 
             @Override
