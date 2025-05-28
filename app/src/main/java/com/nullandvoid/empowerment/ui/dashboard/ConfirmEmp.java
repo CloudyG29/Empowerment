@@ -1,5 +1,7 @@
 package com.nullandvoid.empowerment.ui.dashboard;
 
+import static android.view.View.VISIBLE;
+
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
@@ -10,12 +12,15 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.nullandvoid.empowerment.Menu;
 import com.nullandvoid.empowerment.R;
+import com.nullandvoid.empowerment.ui.home.RequestUserAdapter;
 
 public class ConfirmEmp extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Menu.hideProgressBar();
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_confirm_emp);

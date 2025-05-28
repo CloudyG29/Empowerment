@@ -1,5 +1,7 @@
 package com.nullandvoid.empowerment.ui.profile;
 
+import static android.view.View.VISIBLE;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ClipData;
@@ -17,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +34,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.bumptech.glide.Glide;
 import com.nullandvoid.empowerment.DonationActivity;
 import com.nullandvoid.empowerment.LoginActivity;
+import com.nullandvoid.empowerment.Menu;
 import com.nullandvoid.empowerment.NotificationsActivity;
 import com.nullandvoid.empowerment.R;
 import com.nullandvoid.empowerment.RequestsActivity;
@@ -64,6 +68,7 @@ public class ProfileFragment extends Fragment {
     private CircleImageView profileImage;
     SharedPreferences sharedPreferences;
     String userid, email, name, surname;
+
     private FragmentProfileBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -71,6 +76,7 @@ public class ProfileFragment extends Fragment {
 
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
 
         sharedPreferences = requireActivity().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
 
@@ -100,10 +106,6 @@ public class ProfileFragment extends Fragment {
         ImageView donation_img = root.findViewById(R.id.donation_bar);
         ImageView request_img = root.findViewById(R.id.request_bar);
         ImageView logout_img = root.findViewById(R.id.logout_bar);
-        //FragmentContainerView nestedHost = root.findViewById(R.id.nested_nav_host);
-
-
-
 
         View.OnClickListener notificationClickListener = new View.OnClickListener() {
             @Override
@@ -191,7 +193,7 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-
+    Menu.hideProgressBar();
         return root;
 
 
@@ -233,6 +235,7 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Menu.showProgressBar();
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == Activity.RESULT_OK && requestCode == UCrop.REQUEST_CROP) {
@@ -246,6 +249,7 @@ public class ProfileFragment extends Fragment {
             Throwable cropError = UCrop.getError(data);
             Toast.makeText(getContext(), "Crop failed: " + cropError.getMessage(), Toast.LENGTH_SHORT).show();
         }
+        Menu.hideProgressBar();
     }
     private void uploadImageToServer(File imageFile) {
         OkHttpClient client = new OkHttpClient();

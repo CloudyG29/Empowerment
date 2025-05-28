@@ -139,6 +139,7 @@ public class EmpowerFragment extends Fragment {
                 add_balance(parsedQuantity, selecteditem, userid);
             }
         });
+        Menu.hideProgressBar();
         return view;
 
     }

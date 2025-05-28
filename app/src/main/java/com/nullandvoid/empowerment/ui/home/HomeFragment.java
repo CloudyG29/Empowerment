@@ -65,9 +65,10 @@ public class HomeFragment extends Fragment {
 
     private List<RequestUser> userList = new ArrayList<>();
 
-
+//TODO: consider using tooltips instead of toasts
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
@@ -94,7 +95,7 @@ public class HomeFragment extends Fragment {
         });
 
         fetchItemsFromServer();
-
+        Menu.hideProgressBar();
         return root;
     }
 
