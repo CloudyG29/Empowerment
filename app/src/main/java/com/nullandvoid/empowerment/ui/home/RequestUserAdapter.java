@@ -24,6 +24,7 @@ public class RequestUserAdapter extends RecyclerView.Adapter<RequestUserAdapter.
     private List<RequestUser> userList;
     private Context context;
     private String selecteditem;
+    public static int q;
 
     public RequestUserAdapter(List<RequestUser> userList, Context context, String selecteditem) {
         this.userList = userList;
@@ -68,7 +69,8 @@ public class RequestUserAdapter extends RecyclerView.Adapter<RequestUserAdapter.
             Menu.showProgressBar();
             intent.putExtra("name",user.name);
             intent.putExtra("surname",user.surname);
-            intent.putExtra("quantity",Integer.parseInt(String.valueOf(user.quantity)));
+            intent.putExtra("quantity", Integer.parseInt(String.valueOf(user.quantity)));
+            q = user.quantity;
             intent.putExtra("biography",user.biography);
             intent.putExtra("selectedItem", selecteditem);
             context.startActivity(intent);

@@ -34,10 +34,10 @@ public class ConfirmEmp extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             String name=getIntent().getStringExtra("name");
             String surname=getIntent().getStringExtra("surname");
-            String quantity=getIntent().getStringExtra("quantity");
+            //String quantity=getIntent().getStringExtra("quantity");
+            String quantity= String.valueOf(RequestUserAdapter.q);
             String biography=getIntent().getStringExtra("biography");
             String itemName =getIntent().getStringExtra("selectedItem");
-
             TextView name_of=findViewById(R.id.name_of);
             name_of.setText(name+" "+surname);
             TextView quantity_of=findViewById(R.id.quantity_of);
