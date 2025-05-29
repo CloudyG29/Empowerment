@@ -112,7 +112,7 @@ public class EmpowerFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selecteditem = parent.getItemAtPosition(position).toString();
-                Toast.makeText(requireContext(), "Selected: " + selecteditem, Toast.LENGTH_SHORT).show();
+               // Toast.makeText(requireContext(), "Selected: " + selecteditem, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -125,18 +125,36 @@ public class EmpowerFragment extends Fragment {
             public void onClick(View v) {
                 EditText Bquantity = view.findViewById(R.id.quantity);
                 String quantityText = Bquantity.getText().toString().trim();
-                if (quantityText.isEmpty()) {
-                    Toast.makeText(getContext(), "Please enter a quantity", Toast.LENGTH_SHORT).show();
+                if(checkQuantity(quantityText)){
+                    if (Integer.parseInt(quantityText) > 0) {
+                        parsedQuantity = Integer.parseInt(quantityText);
+                    }
+                    else{
+                        Toast.makeText(getContext(), "Please enter a valid quantity", Toast.LENGTH_SHORT).show();
+                    }
                 }
-                try {
-                    parsedQuantity = Integer.parseInt(quantityText);
-                } catch (NumberFormatException e) {
-                    Toast.makeText(getContext(), "Invalid quantity", Toast.LENGTH_SHORT).show();
-                }
+                //try {
+                    //parsedQuantity = Integer.parseInt(quantityText);
+                //} catch (NumberFormatException e) {
+                    //Toast.makeText(getContext(), "Invalid quantity", Toast.LENGTH_SHORT).show();
+                //}
                 if (selecteditem == null || selecteditem.isEmpty()) {
                     Toast.makeText(getContext(), "Please select an item", Toast.LENGTH_SHORT).show();
                 }
-                add_balance(parsedQuantity, selecteditem, userid);
+
+                if(!selecteditem.equals("Select item") && parsedQuantity > 0) {
+                    add_balance(parsedQuantity, selecteditem, userid);
+                }
+                else {
+                    if(selecteditem.equals("Select item")) {
+                        Toast.makeText(getContext(), "Please select an item", Toast.LENGTH_SHORT).show();
+                    }
+
+                    if(parsedQuantity <= 0) {
+                        Toast.makeText(getContext(), "Please enter a valid quantity", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
             }
         });
         Menu.hideProgressBar();
@@ -144,7 +162,15 @@ public class EmpowerFragment extends Fragment {
 
     }
 
-
+public  Boolean checkQuantity(String s) {
+    try {
+    parsedQuantity = Integer.parseInt(s);
+    return true;
+    } catch (NumberFormatException e) {
+        //Toast.makeText(getContext(), "Invalid quantity", Toast.LENGTH_SHORT).show();
+        return false;
+    }
+}
     private void fetchItemsFromServer() {
         new Thread(() -> {
             try {
@@ -166,20 +192,21 @@ public class EmpowerFragment extends Fragment {
                 for (int i = 0; i < jsonArray.length(); i++) {
                     items.add(jsonArray.getString(i));
                 }
+                items.add(0, "Select item");
 
                 // Update the Spinner on the UI thread
-                if (getActivity() != null) { // Check if activity is still available
+                if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
-                        if (getContext() != null && itemSpinner != null) { // Additional safety checks
-                            // *** THIS IS WHERE YOU APPLY THE CUSTOM LAYOUT ***
+                        if (getContext() != null && itemSpinner != null) {
                             ArrayAdapter<String> adapter = new ArrayAdapter<>(
                                     requireContext(),
-                                    R.layout.custom_spinner_selected_item, // Your custom layout for the selected item
+                                    R.layout.custom_spinner_selected_item,
                                     items
                             );
-                            // Set the layout for the Dropdown items (e.g., a standard Android layout)
+
                             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                             itemSpinner.setAdapter(adapter);
+                            itemSpinner.setSelection(0);
                         }
                     });
                 }
@@ -195,7 +222,9 @@ public class EmpowerFragment extends Fragment {
     }
 
     public void add_balance(int quantity, String selecteditem, String userid) {
-
+        if(selecteditem.equals("Select item") || quantity <= 0){
+            return;
+        }
         RequestBody formBody = new FormBody.Builder()
                 .add("Quantity", String.valueOf(quantity))
                 .add("ItemId", selecteditem)

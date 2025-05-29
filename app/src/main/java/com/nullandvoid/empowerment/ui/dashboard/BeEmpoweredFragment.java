@@ -71,7 +71,7 @@ public class BeEmpoweredFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selecteditem = parent.getItemAtPosition(position).toString();
-                Toast.makeText(requireContext(), "Selected: " + selecteditem, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(requireContext(), "Selected: " + selecteditem, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -90,6 +90,10 @@ public class BeEmpoweredFragment extends Fragment {
 
                 String bioInput = Bbio.getText().toString().trim();
                 String quantityText = Bquantity.getText().toString().trim();
+                if(selecteditem.equals("Select item")) {
+                    Toast.makeText(getContext(), "Please select an item", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
                 if (bioInput.isEmpty()) {
                     Toast.makeText(getContext(), "Please enter a biography", Toast.LENGTH_SHORT).show();
@@ -152,6 +156,7 @@ public class BeEmpoweredFragment extends Fragment {
                 for (int i = 0; i < jsonArray.length(); i++) {
                     items.add(jsonArray.getString(i));
                 }
+                items.add(0, "Select item");
 
                 // Update the Spinner on the UI thread
                 if (getActivity() != null) { // Check if activity is still available
@@ -166,6 +171,7 @@ public class BeEmpoweredFragment extends Fragment {
                             // Set the layout for the Dropdown items (e.g., a standard Android layout)
                             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                             itemSpinner.setAdapter(adapter);
+                            itemSpinner.setSelection(0);
                         }
                     });
                 }

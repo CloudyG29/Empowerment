@@ -1,8 +1,12 @@
 package com.nullandvoid.empowerment;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -12,7 +16,6 @@ import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-
 
 import com.nullandvoid.empowerment.databinding.ActivityMenuBinding;
 
@@ -39,7 +42,7 @@ public class Menu extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_menu);
         NavigationUI.setupWithNavController(binding.navView, navController);
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-                showProgressBar();
+            showProgressBar();
         });
 
         navView.setOnItemSelectedListener(item -> {
@@ -53,7 +56,6 @@ public class Menu extends AppCompatActivity {
             NavigationUI.onNavDestinationSelected(item, navController);
             return true;
         });
-
 
         loader = findViewById(R.id.progressBar2);
     }

@@ -1,9 +1,12 @@
 package com.nullandvoid.empowerment;
 
+import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -73,6 +76,12 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 e.printStackTrace();
+                runOnUiThread(() -> {
+                    new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                        loader.setVisibility(GONE);
+                        Toast.makeText(SignupActivity.this, "Network Error", Toast.LENGTH_SHORT).show();
+                    }, 5000);
+                });
             }
 
             @Override

@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -91,7 +93,13 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 e.printStackTrace();
-                Toast.makeText(LoginActivity.this, "Network error", Toast.LENGTH_SHORT).show();
+                runOnUiThread(() -> {
+                    new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                        loader.setVisibility(GONE);
+                        Toast.makeText(LoginActivity.this, "Network Error", Toast.LENGTH_SHORT).show();
+                    }, 6000);
+                });
+
             }
 
             @Override
