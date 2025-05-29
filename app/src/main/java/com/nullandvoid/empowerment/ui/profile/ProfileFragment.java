@@ -71,6 +71,7 @@ public class ProfileFragment extends Fragment {
 
     private FragmentProfileBinding binding;
 
+
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ProfileViewModel profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
 
@@ -240,7 +241,7 @@ public class ProfileFragment extends Fragment {
 
         if (resultCode == Activity.RESULT_OK && requestCode == UCrop.REQUEST_CROP) {
             Uri croppedUri = UCrop.getOutput(data);
-            profileImage.setImageURI(croppedUri);// ✅ Show cropped image
+            profileImage.setImageURI(croppedUri);// Show cropped image
             File imageFile = new File(croppedUri.getPath());
             uploadImageToServer(imageFile);
 
@@ -264,7 +265,7 @@ public class ProfileFragment extends Fragment {
                 .build();
 
         Request request = new Request.Builder()
-                .url("https://lamp.ms.wits.ac.za/home/s2801257/upload_image.php")  // 👈 Your actual PHP endpoint here
+                .url("https://lamp.ms.wits.ac.za/home/s2801257/upload_image.php")  // Your actual PHP endpoint here
                 .post(requestBody)
                 .build();
 
