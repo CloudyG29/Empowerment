@@ -80,7 +80,8 @@ public class SignupActivity extends AppCompatActivity {
                     new Handler(Looper.getMainLooper()).postDelayed(() -> {
                         loader.setVisibility(GONE);
                         Toast.makeText(SignupActivity.this, "Network Error", Toast.LENGTH_SHORT).show();
-                    }, 5000);
+                    }, 3000);
+
                 });
             }
 
@@ -144,7 +145,7 @@ public class SignupActivity extends AppCompatActivity {
         passwordConfirm.setBackgroundResource(R.drawable.edittext);
 
         if(!email.getText().toString().equals("") && !password.getText().toString().equals("") && !name.getText().toString().equals("") && !surname.getText().toString().equals("") && !passwordConfirm.getText().toString().equals("")) {
-
+            loader.setVisibility(GONE);
             if (!isValidEmail(email.getText().toString())) {
                 email.setBackgroundResource(R.drawable.erroredit); // Highlight email field
                 Toast.makeText(SignupActivity.this, "Invalid email address!", Toast.LENGTH_SHORT).show();
@@ -210,6 +211,8 @@ public class SignupActivity extends AppCompatActivity {
         if (allValid) {
             Register(Name, Surname, UserEmail, Password);
         }
+
+        loader.setVisibility(GONE);
     }
 
     public void goLogin(View view) {

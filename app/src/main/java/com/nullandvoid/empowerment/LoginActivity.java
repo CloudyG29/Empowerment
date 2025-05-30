@@ -97,7 +97,7 @@ public class LoginActivity extends AppCompatActivity {
                     new Handler(Looper.getMainLooper()).postDelayed(() -> {
                         loader.setVisibility(GONE);
                         Toast.makeText(LoginActivity.this, "Network Error", Toast.LENGTH_SHORT).show();
-                    }, 6000);
+                    }, 3000);
                 });
 
             }
