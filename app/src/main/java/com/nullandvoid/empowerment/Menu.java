@@ -12,6 +12,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -42,6 +43,18 @@ public class Menu extends AppCompatActivity {
         NavigationUI.setupWithNavController(binding.navView, navController);
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             showProgressBar();
+        });
+
+        navView.setOnItemSelectedListener(item -> {
+            NavDestination curr = navController.getCurrentDestination();
+            if (curr != null && curr.getId() == item.getItemId()) {
+                hideProgressBar();
+                return true;
+            }
+
+            showProgressBar();
+            NavigationUI.onNavDestinationSelected(item, navController);
+            return true;
         });
 
         loader = findViewById(R.id.progressBar2);

@@ -79,7 +79,7 @@ public class HomeFragment extends Fragment {
 
         recyclerView.setAdapter(adapter);
 
-        loadSpinnerItems();
+        //loadSpinnerItems();
         myyspinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -87,6 +87,10 @@ public class HomeFragment extends Fragment {
                 selecteditem=selectedItem;
                 getusers(selecteditem,adapter);
                 adapter.setSelectedItem(selecteditem);
+
+                if (selectedItem.equals("Select item")) {
+                    adapter.updateData(new ArrayList<>());
+                }
 
             }
 
@@ -129,7 +133,7 @@ public class HomeFragment extends Fragment {
                 e.printStackTrace();
             }
         }).start();
-    }
+    }  //TODO: This method seems to be useless
 
 
 
@@ -161,19 +165,27 @@ public class HomeFragment extends Fragment {
                 }
 
                 requireActivity().runOnUiThread(() -> {
+                    items.add(0, "Select item");
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(),
                             android.R.layout.simple_spinner_item, items);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     myyspinner.setAdapter(adapter);
+                    myyspinner.setSelection(0);
                 });
 
             } catch (Exception e) {
                 e.printStackTrace();
+
             }
         }).start();
     }
     public void getusers(String selecteditem,RequestUserAdapter adapter) {
-
+        if(selecteditem.equals("Select item")) {
+            //requireActivity().runOnUiThread(() ->
+                   // Toast.makeText(getContext(), "Select an item", Toast.LENGTH_SHORT).show());
+            return;
+        }
+        Menu.showProgressBar();
         RequestBody formBody = new FormBody.Builder()
                 .add("ItemName", selecteditem)
                 .build();
@@ -188,6 +200,15 @@ public class HomeFragment extends Fragment {
                 e.printStackTrace();
                 requireActivity().runOnUiThread(() -> {
                     Toast.makeText(getContext(), "Network error", Toast.LENGTH_SHORT).show();
+                    List<String> fallbackItems = new ArrayList<>();
+                    fallbackItems.add("Select item");
+
+                    ArrayAdapter<String> fallbackAdapter = new ArrayAdapter<>(requireContext(),
+                            android.R.layout.simple_spinner_item, fallbackItems);
+                    fallbackAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    myyspinner.setAdapter(fallbackAdapter);
+                    myyspinner.setSelection(0);
+
                 });
 
             }
@@ -200,32 +221,30 @@ public class HomeFragment extends Fragment {
 
                 final String responseData = response.body().string();
                 try {
-                    JSONArray array=new JSONArray(responseData);
-                    List<RequestUser> tempList=new ArrayList<>();
+                    if (responseData.trim().startsWith("[")) {
+                        JSONArray array=new JSONArray(responseData);
+                        List<RequestUser> tempList=new ArrayList<>();
 
-                    if (array.length() == 0) {
+                        for (int i = 0; i < array.length(); i++) {
+                            JSONObject obj = array.getJSONObject(i);
+
+                            String name = obj.getString("Name");
+                            String surname = obj.getString("Surname");
+                            int quantity = Integer.parseInt(obj.getString("Quantity"));
+                            String biography = obj.getString("Biography");
+
+                            tempList.add(new RequestUser(name, surname, quantity, biography));
+                        }
+                        new Handler(Looper.getMainLooper()).post(() -> {
+                            adapter.updateData(tempList);
+                        });
+                    }
+                    else {
                         requireActivity().runOnUiThread(() -> {
-                            adapter.updateData(new ArrayList<>()); // ✅ Clear the RecyclerView
+                            adapter.updateData(new ArrayList<>());
                             Toast.makeText(getContext(), "No users requested this item.", Toast.LENGTH_SHORT).show();
                         });
-                        return;
                     }
-
-
-                    for (int i = 0; i < array.length(); i++) {
-                        JSONObject obj = array.getJSONObject(i);
-
-                        String name = obj.getString("Name");
-                        String surname = obj.getString("Surname");
-                        int quantity = Integer.parseInt(obj.getString("Quantity"));
-                        String biography = obj.getString("Biography");
-
-                        tempList.add(new RequestUser(name, surname, quantity, biography));
-                    }
-                    new Handler(Looper.getMainLooper()).post(() -> {
-                        adapter.updateData(tempList);  // This updates the RecyclerView
-                    });
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                     requireActivity().runOnUiThread(() ->
@@ -234,5 +253,7 @@ public class HomeFragment extends Fragment {
 
                 }
             });
+
+        Menu.hideProgressBar();
         }
 }
