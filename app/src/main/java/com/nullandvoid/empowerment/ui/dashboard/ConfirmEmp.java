@@ -63,7 +63,7 @@ public class ConfirmEmp extends AppCompatActivity {
 
 
             TextView name_of=findViewById(R.id.name_of);name_of.setText(donatee_name);
-            TextView surname_of=findViewById(R.id.surname_of);surname_of.setText(donatee_surname);
+            //TextView surname_of=findViewById(R.id.surname_of);surname_of.setText(donatee_surname);
             TextView quantity_of=findViewById(R.id.quantity_of);quantity_of.setText(donatee_quantity);
             TextView bio_of=findViewById(R.id.bio_of);bio_of.setText(donatee_biography);
 
