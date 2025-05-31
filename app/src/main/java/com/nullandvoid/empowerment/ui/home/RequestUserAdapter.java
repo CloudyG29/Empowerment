@@ -68,6 +68,7 @@ public class RequestUserAdapter extends RecyclerView.Adapter<RequestUserAdapter.
             Intent intent=new Intent(context, ConfirmEmp.class);
             Menu.showProgressBar();
             intent.putExtra("name",user.name);
+
             intent.putExtra("surname",user.surname);
             intent.putExtra("quantity", Integer.parseInt(String.valueOf(user.quantity)));
             q = user.quantity;
