@@ -64,7 +64,7 @@ public class NotificationsActivity extends AppCompatActivity {
 
 
     public void fetchMessages(String userid) {
-
+        System.out.println(userid);
         RequestBody formBody = new FormBody.Builder()
                 .add("UserID", userid)
                 .build();
@@ -87,13 +87,16 @@ public class NotificationsActivity extends AppCompatActivity {
                 }
 
                 final String responseData = response.body().string();
+                System.out.println(responseData);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         try{
-                            if (responseData.trim().startsWith("[")) {
-                                messages = new JSONArray(responseData);
+                            JSONObject obj = new JSONObject(responseData);
+                            if (obj.getString("Status").equals("Success")) {
+                                messages = obj.getJSONArray("Donations");
                                 // System.out.println("Array length: " + arr.length());
+
                                 RecyclerView recyclerView = findViewById(R.id.recyclerMessages);
                                 List<MessageItem> messageList = new ArrayList<>();
                                 for (int i = 0; i < messages.length(); i++) {
@@ -101,9 +104,11 @@ public class NotificationsActivity extends AppCompatActivity {
                                         JSONObject personMessage = messages.getJSONObject(i);
                                         String name = personMessage.getString("Name");
                                         String surname = personMessage.getString("Surname");
-                                        String item = personMessage.getString("ItemName");
+                                        String item = personMessage.getString("ItemID");
                                         String quantity = String.valueOf(personMessage.getInt("Quantity"));
                                         String email = personMessage.getString("Email");
+
+                                       // System.out.println(name+ " " + surname + " "+ item + quantity + email + "MOGOMOTSI");
                                         messageList.add(new MessageItem(name, item, quantity, email, surname));
                                     } catch (JSONException e) {
                                         throw new RuntimeException(e);
@@ -113,15 +118,12 @@ public class NotificationsActivity extends AppCompatActivity {
                                 MyAdapter adapter = new MyAdapter(messageList);
                                 recyclerView.setAdapter(adapter);
 
-                            } else if (responseData.trim().startsWith("{")) {
-                                JSONObject obj = new JSONObject(responseData);
-                                if (obj.has("Status")) {
+                            } else if (obj.getString("Status").equals("NoDonations")) {
                                     TextView t = new TextView(NotificationsActivity.this);
                                     t.setText(obj.getString("Status"));
                                     LinearLayout l = findViewById(R.id.NoMessages);
                                     l.addView(t);
                                     System.out.println("Message: " + obj.getString("Status"));
-                                }
                             }
 
                         } catch (JSONException e) {

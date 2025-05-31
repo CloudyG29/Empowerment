@@ -38,7 +38,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
         content = content.replace("QUANTITY", String.valueOf(messageItem.getQuantity()));
 
         holder.Header.setText(header);
-        holder.Content.setText(header);
+        holder.Content.setText(content);
     }
 
     @Override
