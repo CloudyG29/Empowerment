@@ -119,6 +119,8 @@ public class BeEmpoweredFragment extends Fragment {
                 }
 
                 donate_request(parsedQuantity, bioInput, selecteditem, userid);
+                Bbio.setText("");
+                Bquantity.setText("");
             }
         });
 

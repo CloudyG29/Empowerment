@@ -17,8 +17,8 @@
         app:elevation="10dp">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="410dp"
+            android:layout_height="239dp"
             android:orientation="horizontal"
             android:padding="20dp">
 

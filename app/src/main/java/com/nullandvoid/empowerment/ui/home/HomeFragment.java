@@ -65,7 +65,7 @@ public class HomeFragment extends Fragment {
 
     private List<RequestUser> userList = new ArrayList<>();
 
-//TODO: consider using tooltips instead of toasts
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -103,7 +103,7 @@ public class HomeFragment extends Fragment {
         return root;
     }
 
-    private void loadSpinnerItems() {
+    /*private void loadSpinnerItems() {
         new Thread(() -> {
             try {
                 URL url = new URL("https://lamp.ms.wits.ac.za/home/s2801257/itemget.php");
@@ -133,7 +133,7 @@ public class HomeFragment extends Fragment {
                 e.printStackTrace();
             }
         }).start();
-    }  //TODO: This method seems to be useless
+    } */ //TODO: This method seems to be useless
 
 
 

@@ -105,7 +105,6 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if (!response.isSuccessful()) {
-                    //TODO: Someone must handle this so that the app doesnt crash when there is no internet connection
                     throw new IOException("Unexpected code " + response);
                 }
 
