@@ -89,12 +89,10 @@ public class DonationActivity extends AppCompatActivity {
                     public void run() {
 
                         try{
-
                             if (responseData.trim().startsWith("[")) {
                                 System.out.println(responseData);
                                 donation = new JSONArray(responseData);
-                                // System.out.println("Array length: " + arr.length());
-                                RecyclerView recyclerView = findViewById(R.id.recyclerRequests);
+                                RecyclerView recyclerView = findViewById(R.id.recyclerDonation);
                                 List<DonationItem> donationList = new ArrayList<>();
                                 for (int i = 0; i < donation.length(); i++) {
                                     try {

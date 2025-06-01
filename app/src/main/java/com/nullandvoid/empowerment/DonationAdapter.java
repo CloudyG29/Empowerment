@@ -3,9 +3,11 @@ package com.nullandvoid.empowerment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -21,7 +23,7 @@ public class DonationAdapter extends RecyclerView.Adapter<DonationAdapter.Donati
     @NonNull
     @Override
     public DonationAdapter.DonationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.messages, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card, parent, false);
         return new DonationAdapter.DonationViewHolder(view);
     }
 
@@ -31,6 +33,7 @@ public class DonationAdapter extends RecyclerView.Adapter<DonationAdapter.Donati
         String header = donationItem.getItemName() + ": " + donationItem.getQuantity();
 
         holder.Header.setText(header);
+
     }
 
     @Override
@@ -41,10 +44,14 @@ public class DonationAdapter extends RecyclerView.Adapter<DonationAdapter.Donati
     static class DonationViewHolder extends RecyclerView.ViewHolder {
 
         TextView Header;
+        CardView cardView;
+        LinearLayout l;
 
         public DonationViewHolder(@NonNull View itemView) {
             super(itemView);
-            Header = itemView.findViewById(R.id.messageHeader);
+            Header = itemView.findViewById(R.id.Header);
+            cardView = itemView.findViewById(R.id.cardView);
+            l = itemView.findViewById(R.id.rootLayout);
         }
     }
 }

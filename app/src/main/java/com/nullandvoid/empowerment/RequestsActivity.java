@@ -91,9 +91,7 @@ public class RequestsActivity extends AppCompatActivity {
 
                         try{
                             if (responseData.trim().startsWith("[")) {
-                                System.out.println(responseData);
                                 requests = new JSONArray(responseData);
-                                // System.out.println("Array length: " + arr.length());
                                 RecyclerView recyclerView = findViewById(R.id.recyclerRequests);
                                 List<RequestItem> requestList = new ArrayList<>();
                                 for (int i = 0; i < requests.length(); i++) {
