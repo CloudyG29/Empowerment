@@ -64,7 +64,7 @@ public class NotificationsActivity extends AppCompatActivity {
 
 
     public void fetchMessages(String userid) {
-        System.out.println(userid);
+
         RequestBody formBody = new FormBody.Builder()
                 .add("UserID", userid)
                 .build();

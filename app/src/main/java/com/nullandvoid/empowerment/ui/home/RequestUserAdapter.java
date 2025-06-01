@@ -14,11 +14,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.bumptech.glide.Glide;
 import com.nullandvoid.empowerment.Menu;
 import com.nullandvoid.empowerment.R;
 import com.nullandvoid.empowerment.ui.dashboard.ConfirmEmp;
 
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class RequestUserAdapter extends RecyclerView.Adapter<RequestUserAdapter.ViewHolder> {
     private List<RequestUser> userList;
@@ -40,12 +43,14 @@ public class RequestUserAdapter extends RecyclerView.Adapter<RequestUserAdapter.
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView name, quantity, biography;
+        CircleImageView profilePic;
 
         public ViewHolder(View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.userName);
             quantity = itemView.findViewById(R.id.userQuantity);
             biography = itemView.findViewById(R.id.userBio);
+            profilePic = itemView.findViewById(R.id.ProfilePic);
         }
     }
 
@@ -64,6 +69,12 @@ public class RequestUserAdapter extends RecyclerView.Adapter<RequestUserAdapter.
         holder.name.setText(user.name + " " + user.surname);
         holder.quantity.setText("Quantity: " + user.quantity);
         holder.biography.setText("Bio: " + user.biography);
+        Glide.with(context)
+                .load(user.getPhotoUrl())
+                .placeholder(R.drawable.default_profile)
+                .error(R.drawable.default_profile)
+                .into(holder.profilePic);
+
         holder.itemView.setOnClickListener(v->{
             Intent intent=new Intent(context, ConfirmEmp.class);
             Menu.showProgressBar();
@@ -74,6 +85,7 @@ public class RequestUserAdapter extends RecyclerView.Adapter<RequestUserAdapter.
             q = user.quantity;
             intent.putExtra("biography",user.biography);
             intent.putExtra("selectedItem", selecteditem);
+            intent.putExtra("photoUrl", user.getPhotoUrl());
             context.startActivity(intent);
         });
     }
