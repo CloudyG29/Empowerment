@@ -27,7 +27,7 @@ public class Requesttop_donatorsAdapter extends RecyclerView.Adapter<Requesttop_
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.itesms, parent, false);
+                .inflate(R.layout.items, parent, false);
         return new MyViewHolder(view);
     }
 

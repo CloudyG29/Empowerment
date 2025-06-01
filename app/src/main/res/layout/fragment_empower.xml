@@ -76,7 +76,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="28dp"
         android:backgroundTint="@color/yellow"
-        android:text="Button"
+        android:text="Donate"
         android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="@+id/view5"
         app:layout_constraintEnd_toEndOf="@+id/view5"

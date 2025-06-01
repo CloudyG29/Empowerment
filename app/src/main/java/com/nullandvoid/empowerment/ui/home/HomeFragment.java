@@ -167,7 +167,7 @@ public class HomeFragment extends Fragment {
                 requireActivity().runOnUiThread(() -> {
                     items.add(0, "Select item");
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(),
-                            android.R.layout.simple_spinner_item, items);
+                            R.layout.custom_spinner_selected_item, items);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     myyspinner.setAdapter(adapter);
                     myyspinner.setSelection(0);
