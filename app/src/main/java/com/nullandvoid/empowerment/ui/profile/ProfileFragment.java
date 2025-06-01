@@ -245,7 +245,6 @@ public class ProfileFragment extends Fragment {
             File imageFile = new File(croppedUri.getPath());
             uploadImageToServer(imageFile);
 
-            // TODO: upload croppedUri to server
         } else if (resultCode == UCrop.RESULT_ERROR) {
             Throwable cropError = UCrop.getError(data);
             Toast.makeText(getContext(), "Crop failed: " + cropError.getMessage(), Toast.LENGTH_SHORT).show();

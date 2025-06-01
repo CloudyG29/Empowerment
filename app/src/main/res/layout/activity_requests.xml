@@ -35,8 +35,34 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
+                android:layout_gravity="top"
                 app:layout_collapseMode="pin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/button4"
+                        android:layout_width="70dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/chevron_left_24dp_000" />
+
+
+                    <TextView
+                        android:id="@+id/toolbarText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="0dp"
+                        android:text="Requests"
+                        android:textColor="@android:color/white"
+                        android:textSize="20sp" />
+
+                </LinearLayout>
+            </androidx.appcompat.widget.Toolbar>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
@@ -52,7 +78,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/NoRequests"
+        android:id="@+id/NoMessages"
         android:orientation="vertical"
         android:gravity="center"
         android:layout_gravity="center_vertical"/>
