@@ -65,7 +65,7 @@ public class HomeFragment extends Fragment {
 
     private List<RequestUser> userList = new ArrayList<>();
 
-//TODO: consider using tooltips instead of toasts
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -103,7 +103,7 @@ public class HomeFragment extends Fragment {
         return root;
     }
 
-    private void loadSpinnerItems() {
+    /*private void loadSpinnerItems() {
         new Thread(() -> {
             try {
                 URL url = new URL("https://lamp.ms.wits.ac.za/home/s2801257/itemget.php");
@@ -133,7 +133,7 @@ public class HomeFragment extends Fragment {
                 e.printStackTrace();
             }
         }).start();
-    }  //TODO: This method seems to be useless
+    } */ //TODO: This method seems to be useless
 
 
 
@@ -200,6 +200,7 @@ public class HomeFragment extends Fragment {
                 e.printStackTrace();
                 requireActivity().runOnUiThread(() -> {
                     Toast.makeText(getContext(), "Network error", Toast.LENGTH_SHORT).show();
+                    Menu.hideProgressBar();
                     List<String> fallbackItems = new ArrayList<>();
                     fallbackItems.add("Select item");
 
@@ -220,6 +221,7 @@ public class HomeFragment extends Fragment {
                 }
 
                 final String responseData = response.body().string();
+                System.out.println("🔥 Server response: " + responseData);
                 try {
                     if (responseData.trim().startsWith("[")) {
                         JSONArray array=new JSONArray(responseData);
@@ -232,28 +234,32 @@ public class HomeFragment extends Fragment {
                             String surname = obj.getString("Surname");
                             int quantity = Integer.parseInt(obj.getString("Quantity"));
                             String biography = obj.getString("Biography");
+                            String path = obj.optString("path","");
+                            String fullUrl = path.isEmpty() ? null : "https://lamp.ms.wits.ac.za/home/s2801257/" + path;
 
-                            tempList.add(new RequestUser(name, surname, quantity, biography));
+                            tempList.add(new RequestUser(name, surname, quantity, biography, fullUrl));
                         }
-                        new Handler(Looper.getMainLooper()).post(() -> {
+                        requireActivity().runOnUiThread(() -> {
                             adapter.updateData(tempList);
+                            Menu.hideProgressBar(); // ✅ move here
                         });
                     }
                     else {
                         requireActivity().runOnUiThread(() -> {
                             adapter.updateData(new ArrayList<>());
                             Toast.makeText(getContext(), "No users requested this item.", Toast.LENGTH_SHORT).show();
+                            Menu.hideProgressBar();
                         });
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    requireActivity().runOnUiThread(() ->
-                            Toast.makeText(getContext(), "Error parsing data", Toast.LENGTH_SHORT).show());
+                    requireActivity().runOnUiThread(() -> {
+                        Toast.makeText(getContext(), "Error parsing data", Toast.LENGTH_SHORT).show();
+                        Menu.hideProgressBar(); // ✅ also here
+                    });
                 }
 
                 }
             });
-
-        Menu.hideProgressBar();
         }
 }

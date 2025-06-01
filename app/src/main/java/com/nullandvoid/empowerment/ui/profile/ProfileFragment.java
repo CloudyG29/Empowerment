@@ -32,6 +32,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.signature.ObjectKey;
 import com.nullandvoid.empowerment.DonationActivity;
 import com.nullandvoid.empowerment.LoginActivity;
 import com.nullandvoid.empowerment.Menu;
@@ -50,6 +51,7 @@ import java.io.IOException;
 import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -70,6 +72,7 @@ public class ProfileFragment extends Fragment {
     String userid, email, name, surname;
 
     private FragmentProfileBinding binding;
+    OkHttpClient client = new OkHttpClient();
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ProfileViewModel profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
@@ -162,8 +165,8 @@ public class ProfileFragment extends Fragment {
                 builder.setNegativeButton("No", (DialogInterface.OnClickListener) (dialog, which) -> {
                     dialog.cancel();
                 });
-
                 AlertDialog alertDialog = builder.create();
+
                 alertDialog.show();
             }
         };
@@ -191,8 +194,9 @@ public class ProfileFragment extends Fragment {
                         .thumbnail(0.1f) // tiny preview first
                         .into(profileImage);
             }
-        });
 
+        });
+        fetchProfileImageFromServer();
     Menu.hideProgressBar();
         return root;
 
@@ -240,7 +244,7 @@ public class ProfileFragment extends Fragment {
 
         if (resultCode == Activity.RESULT_OK && requestCode == UCrop.REQUEST_CROP) {
             Uri croppedUri = UCrop.getOutput(data);
-            profileImage.setImageURI(croppedUri);// ✅ Show cropped image
+            profileImage.setImageURI(croppedUri);
             File imageFile = new File(croppedUri.getPath());
             uploadImageToServer(imageFile);
 
@@ -251,6 +255,60 @@ public class ProfileFragment extends Fragment {
         }
         Menu.hideProgressBar();
     }
+
+    public void fetchProfileImageFromServer() {
+        RequestBody requestBody = new FormBody.Builder()
+                .add("user_id", userid)
+                .build();
+
+        Request request = new Request.Builder()
+                .url("https://lamp.ms.wits.ac.za/home/s2801257/get_profile_image.php") // 👈 Make this endpoint
+                .post(requestBody)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                requireActivity().runOnUiThread(() ->
+                        Toast.makeText(getContext(), "Failed to load image: " + e.getMessage(), Toast.LENGTH_SHORT).show()
+                );
+
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                if (response.isSuccessful()) {
+                    try {
+                        final String responseBody = response.body().string();
+                        JSONObject json = new JSONObject(responseBody);
+                        if (json.getString("status").equals("Success")) {
+                            String path = json.getString("path");
+                            String fullUrl = "https://lamp.ms.wits.ac.za/home/s2801257/" + path;
+
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("profile_image_path", fullUrl);
+                            editor.apply();
+
+                            requireActivity().runOnUiThread(() -> {
+                                Glide.with(requireContext())
+                                        .load(fullUrl)
+                                        .signature(new ObjectKey(System.currentTimeMillis()))
+                                        .placeholder(R.drawable.default_profile)
+                                        .into(profileImage);
+                            });
+                        }
+                    } catch (JSONException e) {
+                        Log.e("PROFILE_FETCH", "JSON parse error: " + e.getMessage());
+                    }
+                }
+
+
+            }
+        });
+    }
+
     private void uploadImageToServer(File imageFile) {
         OkHttpClient client = new OkHttpClient();
 
