@@ -41,6 +41,7 @@ public class RequestUserAdapter extends RecyclerView.Adapter<RequestUserAdapter.
     }
 
 
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView name, quantity, biography;
         CircleImageView profilePic;

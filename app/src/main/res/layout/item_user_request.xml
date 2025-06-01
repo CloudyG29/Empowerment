@@ -10,8 +10,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        tools:layout_editor_absoluteX="12dp"
-        tools:layout_editor_absoluteY="12dp">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/ProfilePic"
@@ -35,6 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Name Surname"
+                android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -42,13 +45,15 @@
                 android:id="@+id/userQuantity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Quantity: 2" />
+                android:text="Quantity: 2"
+                android:textColor="@color/black" />
 
             <TextView
                 android:id="@+id/userBio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Biography text here..." />
+                android:text="Biography text here..."
+                android:textColor="@color/black" />
         </LinearLayout>
     </LinearLayout>
 

@@ -7,4 +7,13 @@
     tools:context=".LeaderBoardFragment"
     android:fitsSystemWindows="true"
     android:paddingBottom="100dp"
-    android:clipToPadding="false"/>
+    android:clipToPadding="false">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/altbox"
+        android:padding="8dp" />
+
+</FrameLayout>
