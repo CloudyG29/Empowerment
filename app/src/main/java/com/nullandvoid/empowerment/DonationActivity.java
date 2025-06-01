@@ -4,7 +4,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -53,11 +56,17 @@ public class DonationActivity extends AppCompatActivity {
             return insets;
         });
 
+        ImageView btn = findViewById(R.id.button4);
+        btn.setOnClickListener(v -> {
+            finish();
+        });
+
         sharedPreferences = getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
         userid = sharedPreferences.getString(USER_KEY, null);
         loadingPB = findViewById(R.id.progressBar);
         loadingPB.setVisibility(View.VISIBLE);
         fetchDonations(userid);
+
     }
 
     public void fetchDonations(String userid) {
@@ -74,7 +83,10 @@ public class DonationActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 e.printStackTrace();
-                Toast.makeText(DonationActivity.this, "Network error", Toast.LENGTH_SHORT).show();
+                runOnUiThread(()->
+                        Toast.makeText(DonationActivity.this, "Network error", Toast.LENGTH_SHORT).show()
+                );
+
             }
 
             @Override
@@ -89,12 +101,10 @@ public class DonationActivity extends AppCompatActivity {
                     public void run() {
 
                         try{
-
                             if (responseData.trim().startsWith("[")) {
                                 System.out.println(responseData);
                                 donation = new JSONArray(responseData);
-                                // System.out.println("Array length: " + arr.length());
-                                RecyclerView recyclerView = findViewById(R.id.recyclerRequests);
+                                RecyclerView recyclerView = findViewById(R.id.recyclerDonation);
                                 List<DonationItem> donationList = new ArrayList<>();
                                 for (int i = 0; i < donation.length(); i++) {
                                     try {
@@ -112,8 +122,11 @@ public class DonationActivity extends AppCompatActivity {
 
                             } else if (responseData.trim().startsWith("{")) {
                                 JSONObject obj = new JSONObject(responseData);
-                                if (obj.has("status")) {
-                                    System.out.println("Message: " + obj.getString("status"));
+                                if (obj.has("Status")) {
+                                    TextView t = new TextView(DonationActivity.this);
+                                    t.setText(obj.getString("Status"));
+                                    LinearLayout l = findViewById(R.id.NoMessages);
+                                    l.addView(t);
                                 }
                             }
 

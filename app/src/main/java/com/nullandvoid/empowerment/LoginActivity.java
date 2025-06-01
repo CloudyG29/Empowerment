@@ -97,7 +97,7 @@ public class LoginActivity extends AppCompatActivity {
                     new Handler(Looper.getMainLooper()).postDelayed(() -> {
                         loader.setVisibility(GONE);
                         Toast.makeText(LoginActivity.this, "Network Error", Toast.LENGTH_SHORT).show();
-                    }, 6000);
+                    }, 3000);
                 });
 
             }
@@ -130,7 +130,6 @@ public class LoginActivity extends AppCompatActivity {
                             }
 
                             else {
-
                                 Toast.makeText(LoginActivity.this, "Success", Toast.LENGTH_SHORT).show();
                                 SharedPreferences.Editor editor = sharedPreferences.edit();
                                 editor.putString(USER_KEY, person.getString("UserID"));

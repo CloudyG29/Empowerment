@@ -4,7 +4,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -53,11 +56,17 @@ public class RequestsActivity extends AppCompatActivity {
             return insets;
         });
 
+        ImageView btn = findViewById(R.id.button4);
+        btn.setOnClickListener(v -> {
+            finish();
+        });
+
         sharedPreferences = getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
         userid = sharedPreferences.getString(USER_KEY, null);
         loadingPB = findViewById(R.id.progressBar);
         loadingPB.setVisibility(View.VISIBLE);
         fetchRequests(userid);
+
 
     }
 
@@ -91,9 +100,7 @@ public class RequestsActivity extends AppCompatActivity {
 
                         try{
                             if (responseData.trim().startsWith("[")) {
-                                System.out.println(responseData);
                                 requests = new JSONArray(responseData);
-                                // System.out.println("Array length: " + arr.length());
                                 RecyclerView recyclerView = findViewById(R.id.recyclerRequests);
                                 List<RequestItem> requestList = new ArrayList<>();
                                 for (int i = 0; i < requests.length(); i++) {
@@ -113,8 +120,11 @@ public class RequestsActivity extends AppCompatActivity {
 
                             } else if (responseData.trim().startsWith("{")) {
                                 JSONObject obj = new JSONObject(responseData);
-                                if (obj.has("status")) {
-                                    System.out.println("Message: " + obj.getString("status"));
+                                if (obj.has("Status")) {
+                                    TextView t = new TextView(RequestsActivity.this);
+                                    t.setText(obj.getString("Status"));
+                                    LinearLayout l = findViewById(R.id.NoMessages);
+                                    l.addView(t);
                                 }
                             }
 

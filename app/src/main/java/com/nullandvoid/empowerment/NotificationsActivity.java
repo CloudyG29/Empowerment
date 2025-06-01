@@ -4,19 +4,24 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -55,11 +60,17 @@ public class NotificationsActivity extends AppCompatActivity {
             return insets;
         });
 
+        ImageView btn = findViewById(R.id.button4);
+        btn.setOnClickListener(v -> {
+            finish();
+        });
         sharedPreferences = getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
         userid = sharedPreferences.getString(USER_KEY, null);
         loadingPB = findViewById(R.id.progressBar);
         loadingPB.setVisibility(View.VISIBLE);
         fetchMessages(userid);
+
+
     }
 
 
@@ -95,8 +106,6 @@ public class NotificationsActivity extends AppCompatActivity {
                             JSONObject obj = new JSONObject(responseData);
                             if (obj.getString("Status").equals("Success")) {
                                 messages = obj.getJSONArray("Donations");
-                                // System.out.println("Array length: " + arr.length());
-
                                 RecyclerView recyclerView = findViewById(R.id.recyclerMessages);
                                 List<MessageItem> messageList = new ArrayList<>();
                                 for (int i = 0; i < messages.length(); i++) {
@@ -107,8 +116,6 @@ public class NotificationsActivity extends AppCompatActivity {
                                         String item = personMessage.getString("ItemID");
                                         String quantity = String.valueOf(personMessage.getInt("Quantity"));
                                         String email = personMessage.getString("Email");
-
-                                       // System.out.println(name+ " " + surname + " "+ item + quantity + email + "MOGOMOTSI");
                                         messageList.add(new MessageItem(name, item, quantity, email, surname));
                                     } catch (JSONException e) {
                                         throw new RuntimeException(e);
@@ -118,7 +125,7 @@ public class NotificationsActivity extends AppCompatActivity {
                                 MyAdapter adapter = new MyAdapter(messageList);
                                 recyclerView.setAdapter(adapter);
 
-                            } else if (obj.getString("Status").equals("NoDonations")) {
+                            } else if (obj.has("Status")) {
                                     TextView t = new TextView(NotificationsActivity.this);
                                     t.setText(obj.getString("Status"));
                                     LinearLayout l = findViewById(R.id.NoMessages);
