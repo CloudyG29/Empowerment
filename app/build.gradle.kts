@@ -60,6 +60,7 @@ dependencies {
     implementation("androidx.databinding:compiler:3.2.0-alpha11")
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation(libs.compiler)
+    implementation(libs.recyclerview)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
